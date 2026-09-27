@@ -19,4 +19,4 @@ python -m http.server 8080
 
 ## 数据与隐私
 
-会议、录音和 AI 设置保存在浏览器 IndexedDB 中。使用“生成纪要”时，正文会发送到用户配置的 OpenAI 兼容接口。JSON 备份包含 API Key，请妥善保管备份文件。
+会议、录音和 AI 设置保存在浏览器 IndexedDB 中。使用“生成纪要”或“高精度转写”时，正文或录音会发送到用户配置的 OpenAI 兼容接口。JSON 备份包含 API Key，请妥善保管备份文件。

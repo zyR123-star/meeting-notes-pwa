@@ -262,7 +262,11 @@ button:disabled{opacity:.5;cursor:not-allowed}
       <form id="settingsForm" class="form">
         <label class="field"><span>Base URL</span><input id="baseUrlInput" type="url" placeholder="https://api.example.com/v1"></label>
         <label class="field"><span>API Key</span><input id="apiKeyInput" type="password" autocomplete="off" placeholder="sk-..."></label>
-        <label class="field"><span>模型</span><input id="modelInput" placeholder="模型名称"></label>
+        <label class="field"><span>纪要模型</span><input id="modelInput" placeholder="模型名称"></label>
+        <div class="row">
+          <label class="field"><span>转写模型</span><input id="sttModelInput" placeholder="whisper-1"></label>
+          <label class="field"><span>转写语言</span><input id="sttLanguageInput" placeholder="zh"></label>
+        </div>
         <div class="actions">
           <button class="primary" type="submit">保存设置</button>
           <button id="backupBtn" class="secondary" type="button">导出全量 JSON</button>
@@ -284,7 +288,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
   const DB_VERSION=1;
   const SYSTEM_PROMPT="将会议内容整理为Markdown纪要,含:##摘要(≤100字)/##关键决议/##待办(表格:事项|负责人|截止)/##风险,语言与原文一致";
   const $=id=>document.getElementById(id);
-  const els=Object.fromEntries(["backBtn","settingsBtn","pageTitle","pageSub","listView","searchInput","newBtn","tagFilters","meetingList","listEmpty","editView","meetingForm","titleInput","dateInput","attendeesInput","tagsInput","bodyInput","bodyPreview","speechBtn","editTab","previewTab","speechStatus","summaryPanel","summaryBtn","summaryStatus","summaryOutput","appendSummaryBtn","recordPanel","recordBtn","recordStatus","recordings","exportMdBtn","deleteMeetingBtn","settingsView","settingsForm","baseUrlInput","apiKeyInput","modelInput","backupBtn","restoreInput","settingsStatus","toast"].map(id=>[id,$(id)]));
+  const els=Object.fromEntries(["backBtn","settingsBtn","pageTitle","pageSub","listView","searchInput","newBtn","tagFilters","meetingList","listEmpty","editView","meetingForm","titleInput","dateInput","attendeesInput","tagsInput","bodyInput","bodyPreview","speechBtn","editTab","previewTab","speechStatus","summaryPanel","summaryBtn","summaryStatus","summaryOutput","appendSummaryBtn","recordPanel","recordBtn","recordStatus","recordings","exportMdBtn","deleteMeetingBtn","settingsView","settingsForm","baseUrlInput","apiKeyInput","modelInput","sttModelInput","sttLanguageInput","backupBtn","restoreInput","settingsStatus","toast"].map(id=>[id,$(id)]));
   const state={meetings:[],current:null,recordings:[],playbackUrls:new Set(),query:"",tag:"",speech:null,speechListening:false,speechPrefix:"",speechCommitted:"",speechSuffix:"",recorder:null,chunks:[],recordStartedAt:0,recordTimer:null};
   let db;
 
@@ -601,7 +605,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
       return `<div class="recording">
         <div class="tiny">${new Date(item.createdAt).toLocaleString("zh-CN")} · ${formatTime(item.duration)}</div>
         <audio controls preload="metadata" src="${url}"></audio>
-        <button class="ghost delete-recording" type="button" data-id="${escapeHtml(item.id)}">删除录音</button>
+        <div class="actions"><button class="secondary transcribe-recording" type="button" data-id="${escapeHtml(item.id)}">高精度转写</button>
+        <button class="ghost delete-recording" type="button" data-id="${escapeHtml(item.id)}">删除录音</button></div>
       </div>`;
     }).join("");
   }
@@ -614,9 +619,9 @@ button:disabled{opacity:.5;cursor:not-allowed}
     if(!state.current?.id){toast("请先保存会议");return;}
     if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){showRecordingStatus("当前浏览器不支持录音。",true);return;}
     try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
       const mimeType=bestRecordingMime();
-      state.recorder=new MediaRecorder(stream,mimeType?{mimeType}:undefined);
+      state.recorder=new MediaRecorder(stream,{...(mimeType?{mimeType}:{}),audioBitsPerSecond:128000});
       state.chunks=[];state.recordStartedAt=Date.now();
       state.recorder.ondataavailable=event=>{if(event.data.size)state.chunks.push(event.data);};
       state.recorder.onstop=async()=>{
@@ -640,6 +645,30 @@ button:disabled{opacity:.5;cursor:not-allowed}
     }catch(error){showRecordingStatus(`无法开始录音：${error.message}`,true);}
   }
   function showRecordingStatus(text,error=false){setStatus(els.recordStatus,text,error);}
+  async function transcribeRecording(id,button){
+    const item=state.recordings.find(recording=>recording.id===id);
+    const settings=await getOne("settings","ai");
+    if(!item)return;
+    if(!settings?.baseURL||!settings?.apiKey){showRecordingStatus("请先在设置页填写 Base URL、API Key 和转写模型。",true);return;}
+    if(!settings.sttModel){showRecordingStatus("请先在设置页填写转写模型。",true);return;}
+    const base=settings.baseURL.replace(/\/(chat\/completions|audio\/transcriptions)$/,"").replace(/\/+$/,"");
+    const form=new FormData();
+    form.append("file",item.blob,`meeting-${item.id}.${item.blob.type.includes("mp4")?"m4a":"webm"}`);
+    form.append("model",settings.sttModel);
+    if(settings.sttLanguage)form.append("language",settings.sttLanguage);
+    button.disabled=true;button.textContent="转写中…";showRecordingStatus("正在上传录音并转写…");
+    try{
+      const response=await fetch(`${base}/audio/transcriptions`,{method:"POST",headers:{Authorization:`Bearer ${settings.apiKey}`},body:form});
+      if(!response.ok)throw new Error(`HTTP ${response.status} ${(await response.text()).slice(0,180)}`);
+      const result=(await response.json()).text?.trim();
+      if(!result)throw new Error("接口未返回转写文本");
+      const prefix=els.bodyInput.value.trim();
+      els.bodyInput.value=prefix?`${prefix}\n\n${result}\n`:`${result}\n`;
+      showEditorTab("edit");els.bodyInput.focus();els.bodyInput.setSelectionRange(els.bodyInput.value.length,els.bodyInput.value.length);
+      showRecordingStatus("");toast("高精度转写已插入正文，记得保存");
+    }catch(error){showRecordingStatus(`转写失败：${error.message}`,true);}
+    finally{button.disabled=false;button.textContent="高精度转写";}
+  }
   async function removeRecording(id){
     if(!confirmTwice("确定删除这段录音吗？"))return;
     await request(db.transaction("recordings","readwrite").objectStore("recordings").delete(id));
@@ -648,14 +677,16 @@ button:disabled{opacity:.5;cursor:not-allowed}
   }
 
   async function loadSettings(){
-    const settings=(await getOne("settings","ai"))||{baseURL:"",apiKey:"",model:""};
+    const settings=(await getOne("settings","ai"))||{baseURL:"",apiKey:"",model:"",sttModel:"",sttLanguage:"zh"};
     els.baseUrlInput.value=settings.baseURL;
     els.apiKeyInput.value=settings.apiKey;
     els.modelInput.value=settings.model;
+    els.sttModelInput.value=settings.sttModel||"";
+    els.sttLanguageInput.value=settings.sttLanguage||"zh";
   }
   async function saveSettings(event){
     event.preventDefault();
-    await putOne("settings",{key:"ai",baseURL:els.baseUrlInput.value.trim().replace(/\/+$/,""),apiKey:els.apiKeyInput.value.trim(),model:els.modelInput.value.trim()});
+    await putOne("settings",{key:"ai",baseURL:els.baseUrlInput.value.trim().replace(/\/+$/,""),apiKey:els.apiKeyInput.value.trim(),model:els.modelInput.value.trim(),sttModel:els.sttModelInput.value.trim(),sttLanguage:els.sttLanguageInput.value.trim()});
     setStatus(els.settingsStatus,"设置已保存");
     toast("设置已保存");
   }
@@ -666,7 +697,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
     if(!settings?.baseURL||!settings?.apiKey||!settings?.model){
       setStatus(els.summaryStatus,"请先在设置页填写 Base URL、API Key 和模型。",true);return;
     }
-    const endpoint=settings.baseURL.endsWith("/chat/completions")?settings.baseURL:`${settings.baseURL}/chat/completions`;
+    const endpoint=`${settings.baseURL.replace(/\/(chat\/completions|audio\/transcriptions)$/,"").replace(/\/+$/,"")}/chat/completions`;
     els.summaryBtn.disabled=true;els.summaryBtn.textContent="生成中…";setStatus(els.summaryStatus,"正在调用 AI 接口…");
     try{
       const response=await fetch(endpoint,{
@@ -761,6 +792,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
     els.speechBtn.addEventListener("click",toggleSpeech);
     els.recordBtn.addEventListener("click",toggleRecording);
     els.recordings.addEventListener("click",event=>{
+      const transcribe=event.target.closest(".transcribe-recording");
+      if(transcribe){transcribeRecording(transcribe.dataset.id,transcribe);return;}
       const button=event.target.closest(".delete-recording");if(button)removeRecording(button.dataset.id);
     });
     els.summaryBtn.addEventListener("click",generateSummary);
