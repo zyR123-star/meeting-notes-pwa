@@ -3,827 +3,215 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ff9fc4">
+<meta name="theme-color" content="#4F6EF7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>多多的会议速记</title>
+<title>多多速记</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
-  color-scheme:light dark;
-  --primary:#4F6EF7;
-  --primary-soft:#edf0ff;
-  --pink:#ff8fba;
-  --pink-soft:#fff0f6;
-  --mint:#71cfb9;
-  --mint-soft:#ecfbf7;
-  --sun:#ffd56a;
-  --bg:#fff8fb;
-  --surface:#fffefe;
-  --surface-2:#fff7fa;
-  --text:#41374e;
-  --muted:#83768c;
-  --line:#f0dce5;
-  --danger:#d93c4f;
-  --success:#18865b;
-  --shadow:0 10px 28px rgba(128,73,107,.10);
+  color-scheme:light dark;--primary:#4F6EF7;--primary-soft:#edf0ff;--pink:#ff8fba;--pink-soft:#fff0f6;
+  --mint:#71cfb9;--mint-soft:#ecfbf7;--bg:#fff8fb;--surface:#fffefe;--surface2:#fff7fa;--text:#41374e;
+  --muted:#83768c;--line:#f0dce5;--danger:#d93c4f;--success:#18865b;--shadow:0 10px 28px rgba(128,73,107,.1)
 }
-@media(prefers-color-scheme:dark){
-  :root{
-    --primary:#8095ff;
-    --primary-soft:#282b4d;
-    --pink:#ff9fc4;
-    --pink-soft:#3b2633;
-    --mint:#75d8c0;
-    --mint-soft:#1d3733;
-    --sun:#ffd978;
-    --bg:#15131b;
-    --surface:#211d28;
-    --surface-2:#2b2532;
-    --text:#fbf7fc;
-    --muted:#c1b7c7;
-    --line:#423747;
-    --danger:#ff8291;
-    --success:#68d6a6;
-    --shadow:0 10px 32px rgba(0,0,0,.28);
-  }
-}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
+@media(prefers-color-scheme:dark){:root{
+  --primary:#8ea0ff;--primary-soft:#282b4d;--pink:#ff9fc4;--pink-soft:#3b2633;--mint:#75d8c0;--mint-soft:#1d3733;
+  --bg:#15131b;--surface:#211d28;--surface2:#2b2532;--text:#fbf7fc;--muted:#c1b7c7;--line:#423747;--danger:#ff8291
+}}
+*{box-sizing:border-box}[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
-body{
-  margin:0;background:var(--bg);color:var(--text);line-height:1.55;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-}
-::selection{background:#ffd2e5;color:#4a3550}
-button,input,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-.app{width:min(100%,760px);min-height:100vh;margin:auto;padding:0 16px 32px}
-.topbar{
-  position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;
-  min-height:68px;padding:calc(10px + env(safe-area-inset-top)) 0 10px;
-  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)
-}
-.brand-mascot{width:48px;height:48px;flex:none;filter:drop-shadow(0 4px 5px rgba(106,72,103,.12))}
-.brand-mascot svg{display:block;width:100%;height:100%}
-.title-copy{flex:1;min-width:0}
-.topbar h1{margin:0;font-size:20px;line-height:1.25}
-.topbar p{margin:2px 0 0;color:var(--muted);font-size:12px}
-.top-actions{display:flex;gap:8px}
-.icon-btn{
-  width:40px;height:40px;border:1px solid var(--line);border-radius:8px;
-  background:var(--surface);display:grid;place-items:center;font-size:20px
-}
-.view{animation:enter .18s ease-out}
-@keyframes enter{from{opacity:.5;transform:translateY(4px)}}
-.welcome{
-  position:relative;display:flex;align-items:center;gap:12px;overflow:hidden;
-  margin:2px 0 14px;padding:16px;border:1px solid #ffd5e6;border-radius:8px;
-  background:var(--pink-soft)
-}
-.welcome::after{content:"✦";position:absolute;right:14px;top:10px;color:var(--sun);font-size:24px}
-.welcome-sticker{
-  width:48px;height:48px;flex:none;display:grid;place-items:center;color:#fff;font-size:25px;
-  background:var(--pink);border:2px solid color-mix(in srgb,var(--pink) 65%,#9d5879);border-radius:50%
-}
-.welcome span{display:block;color:var(--pink);font-size:10px;font-weight:800;letter-spacing:.12em}
-.welcome h2{margin:2px 0 0;font-size:16px;line-height:1.45}
-.welcome p{margin:3px 0 0;color:var(--muted);font-size:12px}
-.toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:14px}
-.search{position:relative}
-.search input{width:100%;padding-left:38px}
-.search::before{content:"⌕";position:absolute;left:13px;top:8px;color:var(--muted);font-size:22px;z-index:1}
-input,textarea,select{
-  width:100%;border:1px solid var(--line);border-radius:8px;background:var(--surface);
-  padding:11px 12px;outline:none
-}
-input:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 16%,transparent)}
-textarea{resize:vertical;min-height:180px;line-height:1.65}
-button.primary,button.secondary,button.danger,button.ghost{
-  border:1px solid transparent;border-radius:8px;padding:10px 14px;font-weight:600
-}
-button.primary{background:var(--primary);color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--primary) 25%,#37499e)}
-button.secondary{background:var(--surface);border-color:#f2cfdf}
-button.danger{background:color-mix(in srgb,var(--danger) 12%,var(--surface));color:var(--danger);border-color:color-mix(in srgb,var(--danger) 30%,var(--line))}
-button.ghost{background:transparent;border-color:var(--line);color:var(--muted)}
-button:disabled{opacity:.5;cursor:not-allowed}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}
-.chip{
-  flex:none;border:1px solid var(--line);border-radius:999px;background:var(--surface);
-  padding:6px 11px;color:var(--muted);font-size:13px
-}
-.chip.active{background:var(--pink);border-color:#e970a3;color:#fff}
-.cards{display:grid;gap:10px}
-.card{
-  position:relative;overflow:hidden;border:1px solid var(--line);border-top:3px solid var(--pink);border-radius:8px;background:var(--surface);
-  padding:15px;box-shadow:0 1px 0 rgba(20,30,60,.02)
-}
-.card:nth-child(3n+2){border-top-color:var(--primary)}
-.card:nth-child(3n){border-top-color:var(--mint)}
-.card::after{content:"✦";position:absolute;right:11px;top:8px;color:#ffd56a;font-size:15px}
-.card:active{transform:scale(.995)}
-.card h2{margin:0 0 7px;font-size:17px;line-height:1.35}
-.meta{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:5px 12px}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.tag{font-size:12px;color:#a44f75;background:var(--pink-soft);border-radius:999px;padding:3px 8px}
-.empty{padding:54px 16px;text-align:center;color:var(--muted)}
-.empty strong{display:block;color:var(--text);font-size:18px;margin-bottom:6px}
-.form{display:grid;gap:15px}
-.field{display:grid;gap:6px}
-.field>span,.section-title{font-size:13px;font-weight:700;color:var(--muted)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.body-head,.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.segmented{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.segmented button{border:0;background:var(--surface);padding:7px 11px;color:var(--muted)}
-.segmented button.active{background:var(--primary);color:#fff}
-.preview{
-  min-height:180px;padding:14px;border:1px solid var(--line);border-radius:8px;
-  background:var(--surface);overflow-wrap:anywhere
-}
-.preview>:first-child{margin-top:0}.preview>:last-child{margin-bottom:0}
-.preview table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}
-.preview th,.preview td{border:1px solid var(--line);padding:7px;text-align:left}
-.preview code{background:var(--surface-2);padding:2px 5px;border-radius:4px}
-.preview pre{background:var(--surface-2);padding:12px;border-radius:6px;overflow:auto}
-.panel{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:14px;display:grid;gap:12px}
-.panel h2::before,.field>span::before{content:"";display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:50%;background:var(--pink);vertical-align:2px}
-.panel h2{margin:0;font-size:16px}
-.actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
-.actions .grow{flex:1}
-.recording{display:grid;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
-.recording:first-of-type{border-top:0}
-.recording audio{width:100%;height:38px}
-.tiny{font-size:12px;color:var(--muted)}
-.status{min-height:20px;color:var(--muted);font-size:13px;white-space:pre-wrap}
-.summary-output{min-height:120px}
-.toast{
-  position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));z-index:30;
-  max-width:calc(100% - 32px);transform:translate(-50%,18px);opacity:0;pointer-events:none;
-  background:#54435b;color:#fff;border-radius:8px;padding:10px 14px;box-shadow:var(--shadow);
-  transition:.2s
-}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.55;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}
+.app{width:min(100%,760px);min-height:100vh;margin:auto;padding:0 16px 36px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;min-height:68px;padding:calc(10px + env(safe-area-inset-top)) 0 10px;background:color-mix(in srgb,var(--bg) 93%,transparent);backdrop-filter:blur(14px)}
+.brand-mascot{width:48px;height:48px;flex:none;filter:drop-shadow(0 4px 5px rgba(106,72,103,.12))}.brand-mascot svg{display:block;width:100%;height:100%}.title-copy{flex:1;min-width:0}
+.topbar h1{flex:1;min-width:0;margin:0;font-size:20px;line-height:1.25}.topbar p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.icon-btn{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:grid;place-items:center;font-size:20px}
+.view{animation:in .18s ease-out}@keyframes in{from{opacity:.45;transform:translateY(4px)}}
+.welcome{position:relative;display:flex;align-items:center;gap:12px;overflow:hidden;margin:2px 0 14px;padding:16px;border:1px solid #ffd5e6;border-radius:14px;background:var(--pink-soft)}
+.welcome::after{content:"✦";position:absolute;right:14px;top:10px;color:#ffd56a;font-size:24px}.welcome-sticker{width:48px;height:48px;flex:none;display:grid;place-items:center;color:#fff;font-size:25px;background:var(--pink);border:2px solid color-mix(in srgb,var(--pink) 65%,#9d5879);border-radius:50%}
+.welcome span{display:block;color:var(--pink);font-size:10px;font-weight:800;letter-spacing:.12em}.welcome h2{margin:2px 0 0;font-size:16px;line-height:1.45}.welcome p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:2px 0 13px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.tabs button{min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-weight:700}.tabs button.active{background:var(--primary);color:#fff}
+.searchline{display:grid;grid-template-columns:1fr auto;gap:9px;margin-bottom:13px}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:11px 13px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 16%,transparent)}
+textarea{resize:vertical;min-height:170px;line-height:1.65}
+.btn,.primary,.secondary,.danger{border:1px solid transparent;border-radius:14px;min-height:44px;padding:10px 14px;font-weight:700}
+.primary{background:var(--primary);color:#fff}.secondary{background:var(--surface);border-color:var(--line)}.danger{background:color-mix(in srgb,var(--danger) 12%,var(--surface));color:var(--danger);border-color:color-mix(in srgb,var(--danger) 30%,var(--line))}
+button:disabled{opacity:.45;cursor:not-allowed}
+.stack{display:grid;gap:11px}.card,.panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:15px;box-shadow:0 1px 0 rgba(30,40,70,.02)}
+.card{position:relative;overflow:hidden}.card:not(.course-card){border-top:3px solid var(--pink)}.card:not(.course-card):nth-child(3n+2){border-top-color:var(--primary)}.card:not(.course-card):nth-child(3n){border-top-color:var(--mint)}.card::after{content:"✦";position:absolute;right:11px;top:8px;color:#ffd56a;font-size:15px}
+.card h2,.panel h2{margin:0 0 7px;font-size:17px}.panel{display:grid;gap:12px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.course-card{display:grid;gap:12px;border-top:4px solid var(--course,var(--primary))}.course-head{display:flex;align-items:flex-start;gap:10px}.dot{width:14px;height:14px;flex:none;margin-top:5px;border-radius:50%;background:var(--course,var(--primary))}
+.course-title{flex:1;min-width:0}.course-title h2{margin:0}.meta{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:5px 12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{padding:3px 8px;border-radius:999px;background:var(--pink-soft);color:#a44f75;font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}.actions .grow{flex:1}.tiny{font-size:12px;color:var(--muted)}
+.lesson-list{display:grid;gap:7px}.lesson{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;padding:10px 0;border-top:1px solid var(--line);text-align:left}
+.lesson:first-child{border-top:0}.lesson-no{font-weight:800;color:var(--primary)}.lesson-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.state{font-size:11px;border-radius:999px;padding:2px 7px;background:var(--mint-soft);color:var(--success)}.state.draft{background:var(--pink-soft);color:#a44f75}
+.empty{padding:50px 12px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--text);font-size:18px;margin-bottom:5px}
+.form{display:grid;gap:14px}.field{display:grid;gap:6px}.field>span{font-size:13px;font-weight:700;color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.status{min-height:20px;color:var(--muted);font-size:13px;white-space:pre-wrap}
+.audio-meta{display:flex;justify-content:space-between;gap:8px}.player{width:100%;height:44px}
+.marker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.marker-grid button{min-height:44px;padding:6px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+.directory{display:grid;gap:6px}.entry{display:grid;grid-template-columns:60px 1fr;gap:9px;width:100%;padding:9px 0;border:0;border-top:1px solid var(--line);background:transparent;text-align:left}
+.entry:first-child{border-top:0}.entry time{color:var(--primary);font-weight:800}.transcript-row.active{background:var(--primary-soft)}.entry-label{font-size:11px;color:var(--pink)}
+.markdown{overflow-wrap:anywhere}.markdown table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}.markdown th,.markdown td{border:1px solid var(--line);padding:7px;text-align:left}
+.markdown pre{padding:12px;border-radius:10px;background:var(--surface2);overflow:auto}.markdown code{padding:2px 4px;border-radius:4px;background:var(--surface2)}
+.record-bar{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;width:min(calc(100% - 24px),720px);transform:translateX(-50%);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:#43394e;color:#fff;box-shadow:0 12px 36px rgba(0,0,0,.28)}
+.volume{height:34px;display:flex;align-items:flex-end;gap:3px}.volume i{flex:1;min-width:3px;height:5px;border-radius:4px;background:#8fc9ff;transition:height .08s}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));z-index:50;max-width:calc(100% - 30px);transform:translate(-50%,16px);opacity:0;pointer-events:none;padding:10px 14px;border-radius:12px;background:#54435b;color:#fff;box-shadow:var(--shadow);transition:.2s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:420px){
-  .toolbar{grid-template-columns:1fr}
-  .toolbar .primary{min-height:43px}
-  .row{grid-template-columns:1fr}
-}
+@media(max-width:420px){.row{grid-template-columns:1fr}.marker-grid{grid-template-columns:1fr 1fr}.topbar h1{font-size:18px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="topbar">
-    <button id="backBtn" class="icon-btn" type="button" aria-label="返回" hidden>←</button>
-    <div class="brand-mascot" aria-hidden="true">
-      <svg viewBox="0 0 64 64">
-        <path d="M15 47C7 47 3 41 5 35c1-5 5-8 10-8 2-11 18-16 25-6 8-2 14 4 14 11 0 9-7 15-16 15H15z" fill="#fff" stroke="#5b526b" stroke-width="3" stroke-linejoin="round"/>
-        <circle cx="24" cy="36" r="2.5" fill="#5b526b"/><circle cx="40" cy="36" r="2.5" fill="#5b526b"/>
-        <path d="M27 42c3 3 7 3 10 0" fill="none" stroke="#5b526b" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M43 13c-6-6-11 1-4 6-7 5-2 11 4 6 6 5 11-1 4-6 7-5 2-12-4-6z" fill="#ff8fba" stroke="#b75c83" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M12 22l1.5 3 3 .8-3 1.5-.8 3-1.5-3-3-.8 3-1.5z" fill="#ffd56a"/>
-      </svg>
-    </div>
-    <div class="title-copy">
-      <h1 id="pageTitle">多多的会议速记</h1>
-      <p id="pageSub">把重要的话好好收起来</p>
-    </div>
-    <div class="top-actions">
-      <button id="settingsBtn" class="icon-btn" type="button" aria-label="设置">⚙</button>
-    </div>
-  </header>
-
-  <main>
-    <section id="listView" class="view">
-      <div class="welcome">
-        <div class="welcome-sticker">♡</div>
-        <div><span>DUODUO'S NOTEBOOK</span><h2>多多，今天也要把重要的话收好呀。</h2><p>小小记录，也会慢慢闪闪发光。</p></div>
-      </div>
-      <div class="toolbar">
-        <label class="search"><input id="searchInput" type="search" placeholder="搜索标题、参会人、标签或正文"></label>
-        <button id="newBtn" class="primary" type="button">＋ 新建会议</button>
-      </div>
-      <div id="tagFilters" class="chips"></div>
-      <div id="meetingList" class="cards"></div>
-      <div id="listEmpty" class="empty" hidden><strong>还没有会议记录</strong>新建一条，开始速记。</div>
+<header class="topbar">
+  <button id="backBtn" class="icon-btn" type="button" aria-label="返回" hidden>←</button>
+  <div class="brand-mascot" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M15 47C7 47 3 41 5 35c1-5 5-8 10-8 2-11 18-16 25-6 8-2 14 4 14 11 0 9-7 15-16 15H15z" fill="#fff" stroke="#5b526b" stroke-width="3" stroke-linejoin="round"/><circle cx="24" cy="36" r="2.5" fill="#5b526b"/><circle cx="40" cy="36" r="2.5" fill="#5b526b"/><path d="M27 42c3 3 7 3 10 0" fill="none" stroke="#5b526b" stroke-width="2.5" stroke-linecap="round"/><path d="M43 13c-6-6-11 1-4 6-7 5-2 11 4 6 6 5 11-1 4-6 7-5 2-12-4-6z" fill="#ff8fba" stroke="#b75c83" stroke-width="2" stroke-linejoin="round"/><path d="M12 22l1.5 3 3 .8-3 1.5-.8 3-1.5-3-3-.8 3-1.5z" fill="#ffd56a"/></svg></div>
+  <div class="title-copy"><h1 id="pageTitle">多多速记</h1><p id="pageSub">课堂与会议，一次记清楚</p></div>
+  <button id="settingsBtn" class="icon-btn" type="button" aria-label="设置">⚙</button>
+</header>
+<main>
+<section id="homeView" class="view">
+  <div class="welcome"><div class="welcome-sticker">♡</div><div><span>DUODUO'S NOTEBOOK</span><h2>多多，今天也要把重要的话收好呀。</h2><p>课堂和会议，都慢慢变成闪光的记录。</p></div></div>
+  <div class="tabs"><button id="meetTab" type="button" data-mode="meet">会议</button><button id="courseTab" class="active" type="button" data-mode="course">课程</button></div>
+  <div class="searchline"><input id="searchInput" type="search" placeholder="搜索标题、正文、笔记或标签"><button id="createBtn" class="primary" type="button">＋</button></div>
+  <div id="homeList" class="stack"></div>
+  <div class="actions" style="margin-top:16px"><button id="backupBtn" class="secondary" type="button">导出备份 JSON</button><label class="secondary btn">恢复备份<input id="restoreInput" type="file" accept=".json,application/json" hidden></label></div>
+</section>
+<section id="courseView" class="view" hidden>
+  <form id="courseForm" class="form">
+    <label class="field"><span>课程名称</span><input id="courseName" required></label>
+    <div class="row"><label class="field"><span>老师</span><input id="courseTeacher"></label><label class="field"><span>学期</span><input id="courseTerm" placeholder="2026 秋季"></label></div>
+    <label class="field"><span>课程颜色</span><input id="courseColor" type="color" value="#4F6EF7"></label>
+    <button class="primary" type="submit">保存课程</button>
+  </form>
+</section>
+<section id="detailView" class="view" hidden>
+  <form id="detailForm" class="form">
+    <div><h2 id="detailHeading" style="margin:0 0 4px">课时详情</h2><div id="detailMeta" class="tiny"></div></div>
+    <label class="field"><span>标题</span><input id="titleInput" required></label>
+    <div class="row"><label class="field"><span>日期</span><input id="dateInput" type="date"></label><label class="field"><span>状态</span><select id="statusInput"><option value="draft">未整理</option><option value="reviewed">已复习</option></select></label></div>
+    <label class="field"><span>标签（逗号分隔）</span><input id="tagsInput"></label>
+    <label class="field"><span>相关人（逗号分隔）</span><input id="peopleInput"></label>
+    <section class="panel">
+      <h2>速记正文</h2><textarea id="bodyInput" placeholder="上课时记录的知识点、例题和作业"></textarea>
+      <details><summary>语音草稿</summary><textarea id="draftInput" placeholder="可先用系统语音识别记录草稿"></textarea><div class="actions" style="margin-top:8px"><button id="draftSpeechBtn" class="secondary" type="button">开始语音草稿</button><button id="draftApplyBtn" class="secondary" type="button">用草稿覆盖正文</button></div></details>
     </section>
-
-    <section id="editView" class="view" hidden>
-      <form id="meetingForm" class="form">
-        <label class="field"><span>标题</span><input id="titleInput" required maxlength="120" placeholder="会议标题"></label>
-        <label class="field"><span>日期</span><input id="dateInput" type="date" required></label>
-        <label class="field"><span>参会人（逗号分隔）</span><input id="attendeesInput" placeholder="张三, 李四"></label>
-        <label class="field"><span>标签（逗号分隔）</span><input id="tagsInput" placeholder="项目, 周会"></label>
-
-        <div class="field">
-          <div class="body-head">
-            <span>正文（Markdown）</span>
-            <div class="actions">
-              <button id="speechBtn" class="secondary" type="button">开始语音</button>
-              <div class="segmented">
-                <button id="editTab" class="active" type="button">编辑</button>
-                <button id="previewTab" type="button">预览</button>
-              </div>
-            </div>
-          </div>
-          <textarea id="bodyInput" placeholder="# 会议记录&#10;&#10;输入内容，或点击“开始语音”。"></textarea>
-          <div id="bodyPreview" class="preview" hidden></div>
-          <div id="speechStatus" class="status"></div>
-        </div>
-
-        <section id="summaryPanel" class="panel" hidden>
-          <div class="section-head">
-            <h2>AI 纪要</h2>
-            <button id="summaryBtn" class="secondary" type="button">生成纪要</button>
-          </div>
-          <div id="summaryStatus" class="status"></div>
-          <textarea id="summaryOutput" class="summary-output" hidden placeholder="生成的 Markdown 纪要"></textarea>
-          <button id="appendSummaryBtn" class="ghost" type="button" hidden>追加到正文末尾</button>
-        </section>
-
-        <section id="recordPanel" class="panel" hidden>
-          <div class="section-head">
-            <h2>录音</h2>
-            <button id="recordBtn" class="secondary" type="button">开始录音</button>
-          </div>
-          <div id="recordStatus" class="status"></div>
-          <div id="recordings"></div>
-        </section>
-
-        <div class="actions">
-          <button class="primary grow" type="submit">保存会议</button>
-          <button id="exportMdBtn" class="secondary" type="button" hidden>导出 Markdown</button>
-          <button id="deleteMeetingBtn" class="danger" type="button" hidden>删除会议</button>
-        </div>
-      </form>
+    <section class="panel">
+      <div class="panel-head"><h2>录音</h2><button id="recordBtn" class="primary" type="button">开始录音</button></div>
+      <div class="audio-meta"><span id="audioInfo" class="tiny">暂无录音</span><span class="tiny">保持前台，建议关闭自动锁屏</span></div>
+      <audio id="player" class="player" controls preload="metadata" hidden></audio>
+      <div id="audioStatus" class="status"></div>
+      <button id="transcribeBtn" class="secondary" type="button">录音转写</button>
     </section>
-
-    <section id="settingsView" class="view" hidden>
-      <form id="settingsForm" class="form">
-        <label class="field"><span>Base URL</span><input id="baseUrlInput" type="url" placeholder="https://api.example.com/v1"></label>
-        <label class="field"><span>API Key</span><input id="apiKeyInput" type="password" autocomplete="off" placeholder="sk-..."></label>
-        <label class="field"><span>纪要模型</span><input id="modelInput" placeholder="模型名称"></label>
-        <div class="row">
-          <label class="field"><span>转写模型</span><input id="sttModelInput" placeholder="whisper-1"></label>
-          <label class="field"><span>转写语言</span><input id="sttLanguageInput" placeholder="zh"></label>
-        </div>
-        <div class="actions">
-          <button class="primary" type="submit">保存设置</button>
-          <button id="backupBtn" class="secondary" type="button">导出全量 JSON</button>
-          <label class="secondary" style="border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-weight:600">
-            恢复备份<input id="restoreInput" type="file" accept=".json,application/json" hidden>
-          </label>
-        </div>
-        <div id="settingsStatus" class="status"></div>
-        <p class="tiny" style="margin:0">版本 0.1.4</p>
-      </form>
+    <section class="panel">
+      <h2>时间戳目录</h2>
+      <div id="markerButtons" class="marker-grid"><button type="button" data-label="重点">重点</button><button type="button" data-label="例题">例题</button><button type="button" data-label="疑问">疑问</button><button type="button" data-label="作业">作业</button></div>
+      <div id="directory" class="directory"></div>
     </section>
-  </main>
+    <section class="panel">
+      <div class="panel-head"><h2 id="noteHeading">AI 笔记</h2><button id="noteBtn" class="primary" type="button">生成笔记</button></div>
+      <div id="noteStatus" class="status"></div><div id="noteView" class="markdown"><span class="tiny">暂无笔记</span></div>
+    </section>
+    <div class="actions"><button id="exportBtn" class="secondary" type="button">导出 Markdown</button><button id="deleteBtn" class="danger" type="button">删除记录</button></div>
+  </form>
+</section>
+<section id="settingsView" class="view" hidden>
+  <form id="settingsForm" class="form">
+    <label class="field"><span>服务商预设</span><select id="providerInput"><option value="siliconflow">硅基流动（SenseVoiceSmall）</option><option value="groq">Groq（whisper-large-v3-turbo）</option><option value="openai">OpenAI（gpt-4o-mini-transcribe）</option><option value="custom">自定义</option></select></label>
+    <label class="field"><span>笔记 Base URL</span><input id="baseUrlInput" type="url"></label>
+    <label class="field"><span>转写 Base URL</span><input id="asrBaseUrlInput" type="url"></label>
+    <label class="field"><span>API Key</span><input id="apiKeyInput" type="password" autocomplete="off"></label>
+    <div class="row"><label class="field"><span>笔记模型</span><input id="chatModelInput"></label><label class="field"><span>转写模型</span><input id="asrModelInput"></label></div>
+    <label class="field"><span>热词</span><textarea id="hotwordsInput" style="min-height:100px" placeholder="课程名、专业术语、人名，用逗号分隔"></textarea></label>
+    <div class="actions"><button class="primary" type="submit">保存设置</button><button id="clearAudioBtn" class="danger" type="button">清理全部音频保留文字</button></div>
+    <div id="storageInfo" class="tiny"></div><div id="settingsStatus" class="status"></div><p class="tiny" style="margin:0">版本 2.0.0</p>
+  </form>
+</section>
+</main>
 </div>
+<div id="recordBar" class="record-bar" hidden><strong id="recordTime">00:00</strong><div id="volume" class="volume"></div><button id="recordStopBtn" class="danger" type="button">结束</button></div>
 <div id="toast" class="toast" role="status"></div>
-
 <script>
 (()=>{
-  "use strict";
-  const DB_NAME="meeting-notes-db";
-  const DB_VERSION=1;
-  const SYSTEM_PROMPT="将会议内容整理为Markdown纪要,含:##摘要(≤100字)/##关键决议/##待办(表格:事项|负责人|截止)/##风险,语言与原文一致";
-  const $=id=>document.getElementById(id);
-  const els=Object.fromEntries(["backBtn","settingsBtn","pageTitle","pageSub","listView","searchInput","newBtn","tagFilters","meetingList","listEmpty","editView","meetingForm","titleInput","dateInput","attendeesInput","tagsInput","bodyInput","bodyPreview","speechBtn","editTab","previewTab","speechStatus","summaryPanel","summaryBtn","summaryStatus","summaryOutput","appendSummaryBtn","recordPanel","recordBtn","recordStatus","recordings","exportMdBtn","deleteMeetingBtn","settingsView","settingsForm","baseUrlInput","apiKeyInput","modelInput","sttModelInput","sttLanguageInput","backupBtn","restoreInput","settingsStatus","toast"].map(id=>[id,$(id)]));
-  const state={meetings:[],current:null,recordings:[],playbackUrls:new Set(),query:"",tag:"",speech:null,speechListening:false,speechPrefix:"",speechCommitted:"",speechSuffix:"",recorder:null,chunks:[],recordStartedAt:0,recordTimer:null};
-  let db;
-
-  function request(req){
-    return new Promise((resolve,reject)=>{
-      req.onsuccess=()=>resolve(req.result);
-      req.onerror=()=>reject(req.error);
-    });
-  }
-  function transactionDone(tx){
-    return new Promise((resolve,reject)=>{
-      tx.oncomplete=resolve;
-      tx.onerror=()=>reject(tx.error);
-      tx.onabort=()=>reject(tx.error);
-    });
-  }
-  function openDatabase(){
-    return new Promise((resolve,reject)=>{
-      const req=indexedDB.open(DB_NAME,DB_VERSION);
-      req.onupgradeneeded=()=>{
-        const database=req.result;
-        if(!database.objectStoreNames.contains("meetings")) database.createObjectStore("meetings",{keyPath:"id"});
-        if(!database.objectStoreNames.contains("recordings")){
-          const store=database.createObjectStore("recordings",{keyPath:"id"});
-          store.createIndex("meetingId","meetingId");
-        }
-        if(!database.objectStoreNames.contains("settings")) database.createObjectStore("settings",{keyPath:"key"});
-      };
-      req.onsuccess=()=>resolve(req.result);
-      req.onerror=()=>reject(req.error);
-    });
-  }
-  const getAll=store=>request(db.transaction(store).objectStore(store).getAll());
-  const getOne=(store,key)=>request(db.transaction(store).objectStore(store).get(key));
-  const putOne=(store,value)=>request(db.transaction(store,"readwrite").objectStore(store).put(value));
-  function getRecordings(meetingId){
-    const store=db.transaction("recordings").objectStore("recordings");
-    return request(store.index("meetingId").getAll(IDBKeyRange.only(meetingId)));
-  }
-  function deleteMeeting(meetingId){
-    return new Promise((resolve,reject)=>{
-      const tx=db.transaction(["meetings","recordings"],"readwrite");
-      tx.objectStore("meetings").delete(meetingId);
-      const cursor=tx.objectStore("recordings").index("meetingId").openCursor(IDBKeyRange.only(meetingId));
-      cursor.onsuccess=()=>{const item=cursor.result;if(item){item.delete();item.continue();}};
-      tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);
-    });
-  }
-  function uid(){
-    return crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  }
-  function splitList(value){
-    return [...new Set(value.split(/[,，]/).map(item=>item.trim()).filter(Boolean))];
-  }
-  function today(){
-    const d=new Date();
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-  }
-  function formatDate(value){
-    if(!value)return "未设置日期";
-    const [y,m,d]=value.split("-").map(Number);
-    return `${y}年${m}月${d}日`;
-  }
-  function formatTime(seconds){
-    const m=Math.floor(seconds/60).toString().padStart(2,"0");
-    const s=Math.floor(seconds%60).toString().padStart(2,"0");
-    return `${m}:${s}`;
-  }
-  function toast(message){
-    els.toast.textContent=message;
-    els.toast.classList.add("show");
-    clearTimeout(toast.timer);
-    toast.timer=setTimeout(()=>els.toast.classList.remove("show"),2200);
-  }
-  function confirmTwice(message){
-    return window.confirm(`${message}\n\n此操作不可撤销，是否继续？`) && window.confirm("请再次确认删除。");
-  }
-  function setStatus(el,text,error=false){
-    el.textContent=text;
-    el.style.color=error?"var(--danger)":"var(--muted)";
-  }
-  function escapeHtml(value){
-    return value.replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
-  }
-  function inlineMarkdown(value){
-    let text=escapeHtml(value);
-    text=text.replace(/`([^`]+)`/g,"<code>$1</code>");
-    text=text.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
-    text=text.replace(/\*([^*]+)\*/g,"<em>$1</em>");
-    text=text.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return text;
-  }
-  // 轻量 Markdown：支持标题、列表、引用、代码、链接、粗体和纪要表格。
-  function markdown(value){
-    const blocks=[];
-    let source=value.replace(/```([\s\S]*?)```/g,(_,code)=>`@@CODE${blocks.push(`<pre><code>${escapeHtml(code.trim())}</code></pre>`)-1}@@`);
-    const lines=source.split(/\r?\n/);
-    let html="",listType="";
-    const closeList=()=>{if(listType){html+=`</${listType}>`;listType="";}};
-    for(let i=0;i<lines.length;i++){
-      const line=lines[i];
-      if(/^@@CODE\d+@@$/.test(line.trim())){closeList();html+=blocks[Number(line.match(/\d+/)[0])];continue;}
-      if(/^\s*\|.*\|\s*$/.test(line)&&/^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i+1]||"")){
-        closeList();
-        const rows=[];
-        while(i<lines.length&&/^\s*\|.*\|\s*$/.test(lines[i])){
-          const cells=lines[i].trim().replace(/^\||\|$/g,"").split("|").map(cell=>cell.trim());
-          if(!/^[\s:|-]+$/.test(cells.join("")))rows.push(cells);
-          i++;
-        }
-        i--;
-        html+="<table>";
-        rows.forEach((cells,row)=>{
-          const tag=row===0?"th":"td";
-          html+=`<tr>${cells.map(cell=>`<${tag}>${inlineMarkdown(cell)}</${tag}>`).join("")}</tr>`;
-        });
-        html+="</table>";continue;
-      }
-      const heading=line.match(/^(#{1,6})\s+(.+)$/);
-      if(heading){closeList();const level=heading[1].length;html+=`<h${level}>${inlineMarkdown(heading[2])}</h${level}>`;continue;}
-      const unordered=line.match(/^\s*[-*]\s+(.+)$/);
-      const ordered=line.match(/^\s*\d+\.\s+(.+)$/);
-      if(unordered||ordered){
-        const wanted=unordered?"ul":"ol";
-        if(listType!==wanted){closeList();listType=wanted;html+=`<${wanted}>`;}
-        html+=`<li>${inlineMarkdown((unordered||ordered)[1])}</li>`;continue;
-      }
-      if(/^\s*>\s?/.test(line)){closeList();html+=`<blockquote>${inlineMarkdown(line.replace(/^\s*>\s?/,""))}</blockquote>`;continue;}
-      if(!line.trim()){closeList();continue;}
-      closeList();html+=`<p>${inlineMarkdown(line)}</p>`;
-    }
-    closeList();return html||"<p class='tiny'>暂无内容</p>";
-  }
-  function download(filename,content,type){
-    const blob=new Blob([content],{type});
-    const url=URL.createObjectURL(blob);
-    const link=document.createElement("a");
-    link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
-  }
-  function meetingMarkdown(meeting){
-    return `# ${meeting.title}\n\n- 日期：${meeting.date}\n- 参会人：${meeting.attendees.join("、")||"无"}\n- 标签：${meeting.tags.join("、")||"无"}\n\n${meeting.body||""}\n`;
-  }
-  function showView(name){
-    const isList=name==="list";
-    els.listView.hidden=!isList;
-    els.editView.hidden=name!=="edit";
-    els.settingsView.hidden=name!=="settings";
-    els.backBtn.hidden=isList;
-    els.settingsBtn.hidden=!isList;
-    els.pageTitle.textContent=name==="settings"?"设置":name==="edit"?(state.current?.id?"编辑会议":"新建会议"):"多多的会议速记";
-    els.pageSub.textContent=name==="settings"?"AI 接口与数据备份":name==="edit"?"支持 Markdown 与语音速记":"把重要的话好好收起来";
-  }
-  async function loadMeetings(){
-    state.meetings=(await getAll("meetings")).sort((a,b)=>b.date.localeCompare(a.date)||b.updatedAt.localeCompare(a.updatedAt));
-    renderList();
-  }
-  function renderList(){
-    const tags=[...new Set(state.meetings.flatMap(item=>item.tags||[]))].sort((a,b)=>a.localeCompare(b,"zh-CN"));
-    els.tagFilters.innerHTML=["全部",...tags].map(tag=>{
-      const value=tag==="全部"?"":tag;
-      return `<button class="chip ${state.tag===value?"active":""}" type="button" data-tag="${escapeHtml(value)}">${escapeHtml(tag)}</button>`;
-    }).join("");
-    const query=state.query.trim().toLowerCase();
-    const filtered=state.meetings.filter(item=>{
-      const haystack=[item.title,...(item.attendees||[]),...(item.tags||[]),item.body||""].join(" ").toLowerCase();
-      return (!query||haystack.includes(query))&&(!state.tag||(item.tags||[]).includes(state.tag));
-    });
-    els.meetingList.innerHTML=filtered.map(item=>`
-      <article class="card" data-id="${escapeHtml(item.id)}" tabindex="0">
-        <h2>${escapeHtml(item.title)}</h2>
-        <div class="meta"><span>${formatDate(item.date)}</span><span>${escapeHtml((item.attendees||[]).join("、")||"未填写参会人")}</span></div>
-        ${item.tags?.length?`<div class="tags">${item.tags.map(tag=>`<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>`:""}
-      </article>`).join("");
-    els.listEmpty.hidden=filtered.length>0;
-    els.listEmpty.innerHTML=state.meetings.length?"<strong>没有匹配的会议</strong>试试其他关键词或标签。":"<strong>还没有会议记录</strong>新建一条，开始速记。";
-  }
-  async function openEditor(id=""){
-    stopSpeech();
-    clearPlaybackUrls();
-    state.current=id?state.meetings.find(item=>item.id===id):null;
-    const meeting=state.current||{id:"",title:"",date:today(),attendees:[],tags:[],body:"",createdAt:"",updatedAt:""};
-    els.titleInput.value=meeting.title;
-    els.dateInput.value=meeting.date;
-    els.attendeesInput.value=meeting.attendees.join(", ");
-    els.tagsInput.value=meeting.tags.join(", ");
-    els.bodyInput.value=meeting.body;
-    els.summaryPanel.hidden=!meeting.id;
-    els.summaryOutput.hidden=true;
-    els.appendSummaryBtn.hidden=true;
-    els.summaryOutput.value="";
-    setStatus(els.summaryStatus,"");
-    els.recordPanel.hidden=!meeting.id;
-    els.exportMdBtn.hidden=!meeting.id;
-    els.deleteMeetingBtn.hidden=!meeting.id;
-    showEditorTab("edit");
-    showView("edit");
-    if(meeting.id)await loadRecordingView(meeting.id);
-    else{state.recordings=[];renderRecordings();}
-  }
-  function meetingFromForm(previous){
-    return {
-      id:previous?.id||uid(),
-      title:els.titleInput.value.trim(),
-      date:els.dateInput.value,
-      attendees:splitList(els.attendeesInput.value),
-      tags:splitList(els.tagsInput.value),
-      body:els.bodyInput.value.trim(),
-      createdAt:previous?.createdAt||new Date().toISOString(),
-      updatedAt:new Date().toISOString()
-    };
-  }
-  function showEditorTab(tab){
-    const preview=tab==="preview";
-    els.bodyInput.hidden=preview;
-    els.bodyPreview.hidden=!preview;
-    els.previewTab.classList.toggle("active",preview);
-    els.editTab.classList.toggle("active",!preview);
-    if(preview)els.bodyPreview.innerHTML=markdown(els.bodyInput.value);
-  }
-  async function saveMeeting(event){
-    event.preventDefault();
-    const previous=state.current;
-    if(!els.titleInput.value.trim()){toast("请填写会议标题");return;}
-    if(!els.dateInput.value){toast("请选择会议日期");return;}
-    const meeting=meetingFromForm(previous);
-    await putOne("meetings",meeting);
-    state.current=meeting;
-    await loadMeetings();
-    els.summaryPanel.hidden=false;
-    els.recordPanel.hidden=false;
-    els.exportMdBtn.hidden=false;
-    els.deleteMeetingBtn.hidden=false;
-    els.pageTitle.textContent="编辑会议";
-    toast("会议已保存");
-    await loadRecordingView(meeting.id);
-  }
-  async function removeCurrentMeeting(){
-    if(!state.current?.id||!confirmTwice(`确定删除“${state.current.title}”及其录音吗？`))return;
-    stopSpeech();
-    await deleteMeeting(state.current.id);
-    state.current=null;
-    await loadMeetings();
-    showView("list");
-    toast("会议已删除");
-  }
-
-  function showSpeechStatus(text,error=false){
-    setStatus(els.speechStatus,text,error);
-  }
-  function updateSpeechText(){
-    els.bodyInput.value=state.speechPrefix+state.speechCommitted+state.speechInterim+state.speechSuffix;
-    const caret=state.speechPrefix.length+state.speechCommitted.length+state.speechInterim.length;
-    els.bodyInput.setSelectionRange(caret,caret);
-  }
-  function finalizeSpeech(){
-    if(!state.speech)return;
-    state.speech=null;
-    state.speechPrefix+=state.speechCommitted+state.speechInterim;
-    state.speechCommitted="";state.speechInterim="";state.speechSuffix="";
-    els.speechBtn.textContent="开始语音";
-    showSpeechStatus("");
-  }
-  function toggleSpeech(){
-    if(state.speechListening){state.speechListening=false;state.speech?.stop();return;}
-    const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if(!Recognition){showSpeechStatus("当前浏览器不支持语音识别，请使用最新版 Safari 或 Chrome。",true);return;}
-    const recognition=new Recognition();
-    state.speech=recognition;
-    state.speechListening=true;
-    state.speechPrefix=els.bodyInput.value.slice(0,els.bodyInput.selectionStart);
-    state.speechSuffix=els.bodyInput.value.slice(els.bodyInput.selectionEnd);
-    state.speechCommitted="";state.speechInterim="";
-    recognition.lang="zh-CN";recognition.continuous=true;recognition.interimResults=true;
-    recognition.onstart=()=>{els.speechBtn.textContent="停止语音";showSpeechStatus("正在听写…");};
-    recognition.onresult=event=>{
-      for(let i=event.resultIndex;i<event.results.length;i++){
-        const text=event.results[i][0].transcript;
-        if(event.results[i].isFinal)state.speechCommitted+=text;
-        else state.speechInterim+=text;
-      }
-      updateSpeechText();
-    };
-    recognition.onerror=event=>{
-      if(!["no-speech","aborted"].includes(event.error))showSpeechStatus(`语音识别失败：${event.error}`,true);
-    };
-    recognition.onend=()=>{
-      if(state.speechListening){setTimeout(()=>{try{recognition.start();}catch{}},250);}
-      else finalizeSpeech();
-    };
-    try{recognition.start();}catch(error){state.speechListening=false;showSpeechStatus(`无法启动语音识别：${error.message}`,true);}
-  }
-  function stopSpeech(){
-    if(!state.speech)return;
-    state.speechListening=false;
-    try{state.speech.stop();}catch{}
-    finalizeSpeech();
-  }
-
-  async function loadRecordingView(meetingId){
-    state.recordings=await getRecordings(meetingId);
-    state.recordings.sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
-    renderRecordings();
-  }
-  function clearPlaybackUrls(){
-    state.playbackUrls.forEach(url=>URL.revokeObjectURL(url));
-    state.playbackUrls.clear();
-  }
-  function renderRecordings(){
-    clearPlaybackUrls();
-    els.recordings.innerHTML=state.recordings.map(item=>{
-      const url=URL.createObjectURL(item.blob);
-      state.playbackUrls.add(url);
-      return `<div class="recording">
-        <div class="tiny">${new Date(item.createdAt).toLocaleString("zh-CN")} · ${formatTime(item.duration)}</div>
-        <audio controls preload="metadata" src="${url}"></audio>
-        <div class="actions"><button class="secondary transcribe-recording" type="button" data-id="${escapeHtml(item.id)}">高精度转写</button>
-        <button class="ghost delete-recording" type="button" data-id="${escapeHtml(item.id)}">删除录音</button></div>
-      </div>`;
-    }).join("");
-  }
-  function bestRecordingMime(){
-    const types=["audio/webm;codecs=opus","audio/mp4","audio/webm","audio/ogg;codecs=opus"];
-    return types.find(type=>MediaRecorder.isTypeSupported(type))||"";
-  }
-  async function toggleRecording(){
-    if(state.recorder?.state==="recording"){state.recorder.stop();return;}
-    if(!state.current?.id){toast("请先保存会议");return;}
-    if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){showRecordingStatus("当前浏览器不支持录音。",true);return;}
-    try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-      const mimeType=bestRecordingMime();
-      state.recorder=new MediaRecorder(stream,{...(mimeType?{mimeType}:{}),audioBitsPerSecond:128000});
-      state.chunks=[];state.recordStartedAt=Date.now();
-      state.recorder.ondataavailable=event=>{if(event.data.size)state.chunks.push(event.data);};
-      state.recorder.onstop=async()=>{
-        clearInterval(state.recordTimer);
-        showRecordingStatus("正在保存录音…");
-        const duration=Math.max(1,Math.round((Date.now()-state.recordStartedAt)/1000));
-        const blob=new Blob(state.chunks,{type:state.recorder.mimeType||mimeType||"audio/webm"});
-        stream.getTracks().forEach(track=>track.stop());
-        await putOne("recordings",{id:uid(),meetingId:state.current.id,blob,duration,createdAt:new Date().toISOString()});
-        state.recorder=null;els.recordBtn.textContent="开始录音";
-        await loadRecordingView(state.current.id);
-        showRecordingStatus("");
-        toast("录音已保存");
-      };
-      state.recorder.start();
-      els.recordBtn.textContent="停止录音";
-      state.recordTimer=setInterval(()=>{
-        showRecordingStatus(`录音中 ${formatTime((Date.now()-state.recordStartedAt)/1000)}`);
-      },500);
-      showRecordingStatus("录音中 00:00");
-    }catch(error){showRecordingStatus(`无法开始录音：${error.message}`,true);}
-  }
-  function showRecordingStatus(text,error=false){setStatus(els.recordStatus,text,error);}
-  async function transcribeRecording(id,button){
-    const item=state.recordings.find(recording=>recording.id===id);
-    const settings=await getOne("settings","ai");
-    if(!item)return;
-    if(!settings?.baseURL||!settings?.apiKey){showRecordingStatus("请先在设置页填写 Base URL、API Key 和转写模型。",true);return;}
-    if(!settings.sttModel){showRecordingStatus("请先在设置页填写转写模型。",true);return;}
-    const base=settings.baseURL.replace(/\/(chat\/completions|audio\/transcriptions)$/,"").replace(/\/+$/,"");
-    const form=new FormData();
-    form.append("file",item.blob,`meeting-${item.id}.${item.blob.type.includes("mp4")?"m4a":"webm"}`);
-    form.append("model",settings.sttModel);
-    if(settings.sttLanguage)form.append("language",settings.sttLanguage);
-    button.disabled=true;button.textContent="转写中…";showRecordingStatus("正在上传录音并转写…");
-    try{
-      const response=await fetch(`${base}/audio/transcriptions`,{method:"POST",headers:{Authorization:`Bearer ${settings.apiKey}`},body:form});
-      if(!response.ok)throw new Error(`HTTP ${response.status} ${(await response.text()).slice(0,180)}`);
-      const result=(await response.json()).text?.trim();
-      if(!result)throw new Error("接口未返回转写文本");
-      const prefix=els.bodyInput.value.trim();
-      els.bodyInput.value=prefix?`${prefix}\n\n${result}\n`:`${result}\n`;
-      showEditorTab("edit");els.bodyInput.focus();els.bodyInput.setSelectionRange(els.bodyInput.value.length,els.bodyInput.value.length);
-      showRecordingStatus("");toast("高精度转写已插入正文，记得保存");
-    }catch(error){showRecordingStatus(`转写失败：${error.message}`,true);}
-    finally{button.disabled=false;button.textContent="高精度转写";}
-  }
-  async function removeRecording(id){
-    if(!confirmTwice("确定删除这段录音吗？"))return;
-    await request(db.transaction("recordings","readwrite").objectStore("recordings").delete(id));
-    await loadRecordingView(state.current.id);
-    toast("录音已删除");
-  }
-
-  async function loadSettings(){
-    const settings=(await getOne("settings","ai"))||{baseURL:"",apiKey:"",model:"",sttModel:"",sttLanguage:"zh"};
-    els.baseUrlInput.value=settings.baseURL;
-    els.apiKeyInput.value=settings.apiKey;
-    els.modelInput.value=settings.model;
-    els.sttModelInput.value=settings.sttModel||"";
-    els.sttLanguageInput.value=settings.sttLanguage||"zh";
-  }
-  async function saveSettings(event){
-    event.preventDefault();
-    await putOne("settings",{key:"ai",baseURL:els.baseUrlInput.value.trim().replace(/\/+$/,""),apiKey:els.apiKeyInput.value.trim(),model:els.modelInput.value.trim(),sttModel:els.sttModelInput.value.trim(),sttLanguage:els.sttLanguageInput.value.trim()});
-    setStatus(els.settingsStatus,"设置已保存");
-    toast("设置已保存");
-  }
-  async function generateSummary(){
-    const content=els.bodyInput.value.trim();
-    if(!content){setStatus(els.summaryStatus,"正文为空，无法生成纪要。",true);return;}
-    const settings=await getOne("settings","ai");
-    if(!settings?.baseURL||!settings?.apiKey||!settings?.model){
-      setStatus(els.summaryStatus,"请先在设置页填写 Base URL、API Key 和模型。",true);return;
-    }
-    const endpoint=`${settings.baseURL.replace(/\/(chat\/completions|audio\/transcriptions)$/,"").replace(/\/+$/,"")}/chat/completions`;
-    els.summaryBtn.disabled=true;els.summaryBtn.textContent="生成中…";setStatus(els.summaryStatus,"正在调用 AI 接口…");
-    try{
-      const response=await fetch(endpoint,{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Authorization":`Bearer ${settings.apiKey}`},
-        body:JSON.stringify({model:settings.model,messages:[{role:"system",content:SYSTEM_PROMPT},{role:"user",content}]})
-      });
-      if(!response.ok)throw new Error(`HTTP ${response.status} ${(await response.text()).slice(0,180)}`);
-      const data=await response.json();
-      const result=data.choices?.[0]?.message?.content;
-      if(typeof result!=="string"||!result.trim())throw new Error("接口未返回有效内容");
-      els.summaryOutput.value=result.trim();
-      els.summaryOutput.hidden=false;
-      els.appendSummaryBtn.hidden=false;
-      setStatus(els.summaryStatus,"纪要已生成，请确认后再追加或保存。");
-    }catch(error){
-      setStatus(els.summaryStatus,`生成失败：${error.message}`,true);
-    }finally{
-      els.summaryBtn.disabled=false;els.summaryBtn.textContent="生成纪要";
-    }
-  }
-  function appendSummary(){
-    const value=els.summaryOutput.value.trim();
-    if(!value)return;
-    els.bodyInput.value=`${els.bodyInput.value.trim()}\n\n${value}\n`;
-    showEditorTab("edit");
-    toast("已追加到正文，记得保存");
-  }
-
-  function blobToDataUrl(blob){
-    return new Promise((resolve,reject)=>{
-      const reader=new FileReader();
-      reader.onload=()=>resolve(reader.result);
-      reader.onerror=()=>reject(reader.error);
-      reader.readAsDataURL(blob);
-    });
-  }
-  async function dataUrlToBlob(dataUrl){
-    return (await fetch(dataUrl)).blob();
-  }
-  async function exportBackup(){
-    setStatus(els.settingsStatus,"正在整理备份…");
-    try{
-      const [meetings,recordings,settings]=await Promise.all([getAll("meetings"),getAll("recordings"),getAll("settings")]);
-      const encoded=await Promise.all(recordings.map(async item=>({...item,blob:await blobToDataUrl(item.blob)})));
-      const payload={version:1,exportedAt:new Date().toISOString(),meetings,recordings:encoded,settings};
-      download(`多多速记备份-${today()}.json`,JSON.stringify(payload),"application/json");
-      setStatus(els.settingsStatus,`已导出 ${meetings.length} 条会议和 ${recordings.length} 段录音。`);
-    }catch(error){setStatus(els.settingsStatus,`导出失败：${error.message}`,true);}
-  }
-  async function restoreBackup(event){
-    const file=event.target.files[0];
-    event.target.value="";
-    if(!file)return;
-    if(!confirmTwice("恢复备份会覆盖当前全部会议、录音和设置。"))return;
-    setStatus(els.settingsStatus,"正在恢复备份…");
-    try{
-      const payload=JSON.parse(await file.text());
-      if(payload.version!==1||!Array.isArray(payload.meetings)||!Array.isArray(payload.recordings))throw new Error("备份格式不正确");
-      const recordings=await Promise.all(payload.recordings.map(async item=>({...item,blob:await dataUrlToBlob(item.blob)})));
-      const tx=db.transaction(["meetings","recordings","settings"],"readwrite");
-      ["meetings","recordings","settings"].forEach(store=>tx.objectStore(store).clear());
-      payload.meetings.forEach(item=>tx.objectStore("meetings").put(item));
-      recordings.forEach(item=>tx.objectStore("recordings").put(item));
-      (payload.settings||[]).forEach(item=>tx.objectStore("settings").put(item));
-      await transactionDone(tx);
-      await loadMeetings();await loadSettings();
-      setStatus(els.settingsStatus,`恢复完成：${payload.meetings.length} 条会议。`);
-      toast("备份已恢复");
-    }catch(error){setStatus(els.settingsStatus,`恢复失败：${error.message}`,true);}
-  }
-
-  function bindEvents(){
-    els.searchInput.addEventListener("input",event=>{state.query=event.target.value;renderList();});
-    els.tagFilters.addEventListener("click",event=>{
-      const button=event.target.closest("[data-tag]");if(!button)return;
-      state.tag=button.dataset.tag;renderList();
-    });
-    els.meetingList.addEventListener("click",event=>{
-      const card=event.target.closest("[data-id]");if(card)openEditor(card.dataset.id);
-    });
-    els.meetingList.addEventListener("keydown",event=>{
-      if(event.key==="Enter")event.target.closest("[data-id]")?.click();
-    });
-    els.newBtn.addEventListener("click",()=>openEditor());
-    els.settingsBtn.addEventListener("click",async()=>{await loadSettings();showView("settings");});
-    els.backBtn.addEventListener("click",()=>{stopSpeech();showView("list");loadMeetings();});
-    els.meetingForm.addEventListener("submit",saveMeeting);
-    els.deleteMeetingBtn.addEventListener("click",removeCurrentMeeting);
-    els.editTab.addEventListener("click",()=>showEditorTab("edit"));
-    els.previewTab.addEventListener("click",()=>showEditorTab("preview"));
-    els.speechBtn.addEventListener("click",toggleSpeech);
-    els.recordBtn.addEventListener("click",toggleRecording);
-    els.recordings.addEventListener("click",event=>{
-      const transcribe=event.target.closest(".transcribe-recording");
-      if(transcribe){transcribeRecording(transcribe.dataset.id,transcribe);return;}
-      const button=event.target.closest(".delete-recording");if(button)removeRecording(button.dataset.id);
-    });
-    els.summaryBtn.addEventListener("click",generateSummary);
-    els.appendSummaryBtn.addEventListener("click",appendSummary);
-    els.exportMdBtn.addEventListener("click",()=>{
-      const meeting=meetingFromForm(state.current);
-      download(`${meeting.title.replace(/[\\/:*?"<>|]/g,"_")||"会议纪要"}.md`,meetingMarkdown(meeting),"text/markdown");
-    });
-    els.settingsForm.addEventListener("submit",saveSettings);
-    els.backupBtn.addEventListener("click",exportBackup);
-    els.restoreInput.addEventListener("change",restoreBackup);
-    window.addEventListener("beforeunload",()=>{stopSpeech();clearPlaybackUrls();});
-  }
-  async function init(){
-    try{
-      db=await openDatabase();
-      bindEvents();
-      els.dateInput.value=today();
-      await loadMeetings();
-      if("serviceWorker"in navigator){
-        let refreshing=false;
-        navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload();}});
-        navigator.serviceWorker.register("sw.js?v=0.1.4").then(registration=>registration.update()).catch(()=>{});
-      }
-    }catch(error){
-      document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong>${escapeHtml(error.message)}</div>`;
-    }
-  }
-  init();
+"use strict";
+const DB_NAME="mtx",DB_VERSION=1,CONFIG_KEY="mtx-settings",COURSE_PROMPT="你是课程助教。把下面的内容整理为Markdown笔记,严格使用这些小节,不加客套话:## 一句话概要(≤60字)/## 知识要点(分条)/## 关键概念定义/## 公式定理(用代码块原样保留)/## 例题讲解/## 作业与截止(表格:任务|截止)/## 待验证疑问(学生可能不懂的地方)。语言与原文一致";
+const MEETING_PROMPT="将会议内容整理为Markdown纪要,含:##摘要(≤100字)/##关键决议/##待办(表格:事项|负责人|截止)/##风险,语言与原文一致";
+const PRESETS={siliconflow:{baseURL:"https://api.siliconflow.cn/v1",asrBaseURL:"https://api.siliconflow.cn/v1",chatModel:"",asrModel:"FunAudioLLM/SenseVoiceSmall"},groq:{baseURL:"https://api.groq.com/openai/v1",asrBaseURL:"https://api.groq.com/openai/v1",chatModel:"",asrModel:"whisper-large-v3-turbo"},openai:{baseURL:"https://api.openai.com/v1",asrBaseURL:"https://api.openai.com/v1",chatModel:"gpt-4o-mini",asrModel:"gpt-4o-mini-transcribe"},custom:{baseURL:"",asrBaseURL:"",chatModel:"",asrModel:""}};
+const $=id=>document.getElementById(id);
+  const els=["backBtn","settingsBtn","pageTitle","pageSub","homeView","meetTab","courseTab","searchInput","createBtn","homeList","backupBtn","restoreInput","courseView","courseForm","courseName","courseTeacher","courseTerm","courseColor","detailView","detailForm","detailHeading","detailMeta","titleInput","dateInput","statusInput","tagsInput","peopleInput","bodyInput","draftInput","draftSpeechBtn","draftApplyBtn","recordBtn","audioInfo","player","audioStatus","transcribeBtn","markerButtons","directory","noteHeading","noteBtn","noteStatus","noteView","exportBtn","deleteBtn","settingsView","settingsForm","providerInput","baseUrlInput","asrBaseUrlInput","apiKeyInput","chatModelInput","asrModelInput","hotwordsInput","clearAudioBtn","storageInfo","settingsStatus","recordBar","recordTime","volume","recordStopBtn","toast"].reduce((o,id)=>(o[id]=$(id),o),{});
+const state={mode:"course",view:"home",query:"",meeting:null,course:null,courses:[],meetings:[],audioUrl:"",saveTimer:0,tickTimer:0,speech:null,speechDraft:"",recording:null};
+let db;
+const request=r=>new Promise((ok,no)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const all=store=>request(db.transaction(store).objectStore(store).getAll());
+const one=(store,key)=>request(db.transaction(store).objectStore(store).get(key));
+const put=(store,value)=>request(db.transaction(store,"readwrite").objectStore(store).put(value));
+const del=(store,key)=>request(db.transaction(store,"readwrite").objectStore(store).delete(key));
+const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(16).slice(2);
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const split=v=>[...new Set(v.split(/[,，]/).map(x=>x.trim()).filter(Boolean))];
+const escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const durationLabel=ms=>{const n=Math.max(0,Math.floor((ms||0)/1000));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")};
+function toast(msg){els.toast.textContent=String(msg||"").slice(0,140);els.toast.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>els.toast.classList.remove("show"),2600)}
+function fail(error){toast((error?.message||error||"操作失败").slice(0,140))}
+function openDB(){return new Promise((ok,no)=>{const r=indexedDB.open(DB_NAME,DB_VERSION);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains("meetings"))d.createObjectStore("meetings",{keyPath:"id"});if(!d.objectStoreNames.contains("courses"))d.createObjectStore("courses",{keyPath:"id"});if(!d.objectStoreNames.contains("audio")){const s=d.createObjectStore("audio",{keyPath:"id"});s.createIndex("meetingId","meetingId")}};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+async function migrateOld(){if(localStorage.getItem("mtx-migrated"))return;let created=false;const old=await new Promise(resolve=>{const r=indexedDB.open("meeting-notes-db");r.onupgradeneeded=()=>{created=true};r.onsuccess=()=>resolve(r.result);r.onerror=()=>resolve(null)});if(!old||created){old?.close();localStorage.setItem("mtx-migrated","1");return}try{if(!["meetings","recordings","settings"].every(s=>old.objectStoreNames.contains(s))){localStorage.setItem("mtx-migrated","1");return}const tx=old.transaction(["meetings","recordings","settings"]);const [meetings,recordings,settings]=await Promise.all(["meetings","recordings","settings"].map(s=>request(tx.objectStore(s).getAll())));const grouped={};recordings.sort((a,b)=>(a.createdAt||"").localeCompare(b.createdAt||"")).forEach(r=>{(grouped[r.meetingId]??=[]).push(r)});for(const m of meetings){const audios=grouped[m.id]||[];let start=0;for(const a of audios){await put("audio",{id:a.id,meetingId:m.id,blob:a.blob,start});start+=(a.duration||0)*1000}await put("meetings",{id:m.id,mode:"meet",courseId:null,lessonNo:null,title:m.title||"未命名会议",date:m.date||today(),tags:m.tags||[],people:m.attendees||[],body:m.body||"",draft:"",transcript:[],markers:[],note:"",status:m.status||"draft",duration:start,chunks:audios.length,updatedAt:m.updatedAt||new Date().toISOString()})}const oldConfig=settings.find(s=>s.key==="ai");if(oldConfig&&!localStorage.getItem(CONFIG_KEY))localStorage.setItem(CONFIG_KEY,JSON.stringify({provider:"custom",baseURL:oldConfig.baseURL||"",asrBaseURL:oldConfig.baseURL||"",apiKey:oldConfig.apiKey||"",chatModel:oldConfig.model||"",asrModel:oldConfig.sttModel||"",hotwords:""}));localStorage.setItem("mtx-migrated","1")}catch(error){toast("旧数据迁移失败："+(error.message||error).slice(0,100))}finally{old.close()}}
+function getConfig(){try{return{provider:"custom",baseURL:"",asrBaseURL:"",apiKey:"",chatModel:"",asrModel:"",hotwords:"",...JSON.parse(localStorage.getItem(CONFIG_KEY)||"{}")}}catch{return{provider:"custom",baseURL:"",asrBaseURL:"",apiKey:"",chatModel:"",asrModel:"",hotwords:""}}}
+function saveConfig(c){localStorage.setItem(CONFIG_KEY,JSON.stringify(c))}
+function endPoint(base,path){return base.replace(/\/(chat\/completions|audio\/transcriptions)$/,"").replace(/\/+$/,"")+path}
+function setView(name){state.view=name;els.homeView.hidden=name!=="home";els.courseView.hidden=name!=="course";els.detailView.hidden=name!=="detail";els.settingsView.hidden=name!=="settings";els.backBtn.hidden=name==="home";els.settingsBtn.hidden=name!=="home";els.pageTitle.textContent=name==="settings"?"设置":name==="course"?(state.course?"编辑课程":"新建课程"):name==="detail"?(state.meeting?.mode==="course"?"课时详情":"会议详情"):"多多速记";els.pageSub.textContent=name==="settings"?"接口、热词与存储":name==="home"?"课堂与会议，一次记清楚":"自动保存"}
+async function loadData(){state.courses=await all("courses");state.meetings=(await all("meetings")).sort((a,b)=>b.date.localeCompare(a.date)||b.updatedAt.localeCompare(a.updatedAt));renderHome()}
+function matches(m,q){return !q||[m.title,m.body,m.note,...(m.tags||[])].join(" ").toLowerCase().includes(q)}
+function lessonButton(m){return `<button class="lesson" type="button" data-open="${escape(m.id)}"><span class="lesson-no">${m.lessonNo?`第${m.lessonNo}讲`:"会议"}</span><span class="lesson-title">${escape(m.title)} · ${escape(m.date)} · ${durationLabel(m.duration)}</span><span class="state ${m.status==="draft"?"draft":""}">${m.mode==="course"?(m.status==="reviewed"?"已复习":"未整理"):(m.status==="reviewed"?"已整理":"草稿")}</span></button>`}
+function renderHome(){const q=state.query.trim().toLowerCase();els.meetTab.classList.toggle("active",state.mode==="meet");els.courseTab.classList.toggle("active",state.mode==="course");if(state.mode==="meet"){const list=state.meetings.filter(m=>m.mode==="meet"&&matches(m,q));els.homeList.innerHTML=list.length?list.map(m=>`<article class="card"><h2>${escape(m.title)}</h2><div class="meta"><span>${escape(m.date)}</span><span>${durationLabel(m.duration)}</span><span>${escape((m.people||[]).join("、")||"无相关人")}</span></div>${m.tags?.length?`<div class="tags" style="margin-top:9px">${m.tags.map(t=>`<span class="tag">${escape(t)}</span>`).join("")}</div>`:""}<div class="actions" style="margin-top:10px"><button class="secondary" type="button" data-open="${escape(m.id)}">打开</button></div></article>`).join(""):`<div class="empty"><strong>还没有会议记录</strong>点右上角 ＋ 新建会议。</div>`;return}const cards=state.courses.map(c=>{const all=state.meetings.filter(m=>m.mode==="course"&&m.courseId===c.id),lessons=all.filter(m=>matches(m,q)).sort((a,b)=>(a.lessonNo||0)-(b.lessonNo||0));if(q&&!lessons.length)return"";return `<article class="card course-card" style="--course:${escape(c.color||"#4F6EF7")}"><div class="course-head"><i class="dot"></i><div class="course-title"><h2>${escape(c.name)}</h2><div class="meta"><span>${escape(c.teacher||"未填写老师")}</span><span>${escape(c.term||"未填写学期")}</span><span>${all.length} 课时</span></div></div></div><div class="actions"><button class="secondary" type="button" data-add-lesson="${escape(c.id)}">＋ 加课时</button><button class="secondary" type="button" data-edit-course="${escape(c.id)}">改</button></div><div class="lesson-list">${lessons.length?lessons.map(lessonButton).join(""):`<div class="tiny">暂无课时</div>`}</div></article>`}).join("");els.homeList.innerHTML=cards||`<div class="empty"><strong>${state.courses.length?"没有匹配的课时":"还没有课程"}</strong>${state.courses.length?"试试其他关键词。":"点右上角 ＋ 新建课程。"}</div>`}
+async function newMeeting(mode,courseId){const course=state.courses.find(c=>c.id===courseId);const n=course?Math.max(0,...state.meetings.filter(m=>m.courseId===courseId&&m.mode==="course").map(m=>m.lessonNo||0))+1:null;const m={id:uid(),mode,courseId:courseId||null,lessonNo:n,title:course?`第${n}讲`:"新会议",date:today(),tags:[],people:[],body:"",draft:"",transcript:[],markers:[],note:"",status:"draft",duration:0,chunks:0,updatedAt:new Date().toISOString()};await put("meetings",m);await loadData();openDetail(m.id)}
+async function editCourse(id){state.course=id?state.courses.find(c=>c.id===id):{id:"",name:"",teacher:"",term:"",color:"#4F6EF7"};els.courseName.value=state.course.name;els.courseTeacher.value=state.course.teacher;els.courseTerm.value=state.course.term;els.courseColor.value=state.course.color||"#4F6EF7";setView("course")}
+async function saveCourse(e){e.preventDefault();const c={...state.course,id:state.course?.id||uid(),name:els.courseName.value.trim(),teacher:els.courseTeacher.value.trim(),term:els.courseTerm.value.trim(),color:els.courseColor.value};if(!c.name)return toast("请填写课程名称");await put("courses",c);state.course=c;await loadData();setView("home");toast("课程已保存")}
+async function openDetail(id){state.meeting=await one("meetings",id);if(!state.meeting)return;els.titleInput.value=state.meeting.title;els.dateInput.value=state.meeting.date;els.statusInput.value=state.meeting.status||"draft";els.tagsInput.value=(state.meeting.tags||[]).join(", ");els.peopleInput.value=(state.meeting.people||[]).join(", ");els.bodyInput.value=state.meeting.body||"";els.draftInput.value=state.meeting.draft||"";const course=state.courses.find(c=>c.id===state.meeting.courseId);els.detailHeading.textContent=state.meeting.mode==="course"?(course?.name||"课程"):state.meeting.title;els.detailMeta.textContent=course?`${course.teacher||"未填写老师"} · 第${state.meeting.lessonNo||1}讲 · ${state.meeting.date}`:state.meeting.date;els.noteHeading.textContent=state.meeting.mode==="course"?"AI 笔记":"AI 纪要";setView("detail");renderDirectory();renderNote();await renderAudio()}
+function syncMeeting(){if(!state.meeting)return;state.meeting={...state.meeting,title:els.titleInput.value.trim(),date:els.dateInput.value,status:els.statusInput.value,tags:split(els.tagsInput.value),people:split(els.peopleInput.value),body:els.bodyInput.value,draft:els.draftInput.value,updatedAt:new Date().toISOString()}}
+async function persistMeeting(){if(!state.meeting)return;syncMeeting();if(!state.meeting.title)state.meeting.title=state.meeting.mode==="course"?"未命名课时":"未命名会议";await put("meetings",state.meeting)}
+function scheduleSave(){clearTimeout(state.saveTimer);state.saveTimer=setTimeout(()=>persistMeeting().catch(fail),600)}
+function stopSpeech(){if(!state.speech)return;state.speech.stop();state.speech=null;els.draftSpeechBtn.textContent="开始语音草稿";state.speechDraft=""}
+function toggleDraftSpeech(){if(state.speech){stopSpeech();return}const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return toast("当前浏览器不支持系统语音识别");const r=new R();state.speech=r;r.lang="zh-CN";r.continuous=true;r.interimResults=true;r.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal){state.speechDraft+=e.results[i][0].transcript}else{ }els.draftInput.value=(state.draftInput.value+state.speechDraft).trim();state.speechDraft="";scheduleSave()};r.onerror=e=>toast("语音草稿失败："+e.error);r.onend=()=>{state.speech=null;els.draftSpeechBtn.textContent="开始语音草稿"};r.start();els.draftSpeechBtn.textContent="停止语音草稿"}
+function bestMime(){return ["audio/webm;codecs=opus","audio/webm","audio/mp4"].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||""}
+function recordingElapsed(){const r=state.recording;return r?Math.round(r.segmentOffset+performance.now()-r.segmentStartedAt):0}
+async function startRecording(){if(!state.meeting?.id)return;if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)return toast("当前浏览器不支持录音");let stream,context;try{stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true}});const Context=window.AudioContext||window.webkitAudioContext;context=new Context();const analyser=context.createAnalyser(),source=context.createMediaStreamSource(stream);analyser.fftSize=128;source.connect(analyser);await context.resume();state.recording={stream,context,analyser,mime:bestMime(),active:true,segmentOffset:state.meeting.duration||0,segmentStartedAt:0,nextOffset:state.meeting.duration||0,recorder:null,chunks:[],rotate:0,tick:0};els.recordBar.hidden=false;els.recordBtn.disabled=true;els.deleteBtn.disabled=true;[...els.markerButtons.children].forEach(b=>b.disabled=false);els.recordBar.querySelector("button").textContent="结束";startSegment();state.recording.tick=setInterval(renderRecording,120)}catch(e){stream?.getTracks().forEach(t=>t.stop());context?.close().catch(()=>{});state.recording=null;fail(e)}}
+function startSegment(){const r=state.recording;if(!r?.active)return;const rec=new MediaRecorder(r.stream,r.mime?{mimeType:r.mime,audioBitsPerSecond:128000}:{audioBitsPerSecond:128000});r.recorder=rec;r.chunks=[];r.segmentOffset=r.nextOffset;r.segmentStartedAt=performance.now();rec.ondataavailable=e=>{if(e.data.size)r.chunks.push(e.data)};rec.onstop=async()=>{try{const duration=Math.max(1,Math.round(performance.now()-r.segmentStartedAt));const type=rec.mimeType||r.mime||"audio/webm",blob=new Blob(r.chunks,{type});r.nextOffset=r.segmentOffset+duration;if(blob.size)await put("audio",{id:uid(),meetingId:state.meeting.id,blob,start:r.segmentOffset});const recordings=await audioFor(state.meeting.id);state.meeting.duration=Math.max(r.nextOffset,recordings.reduce((x,a)=>Math.max(x,a.start),0));state.meeting.chunks=recordings.length;await put("meetings",state.meeting);if(r.active)startSegment();else await finishRecording()}catch(error){r.active=false;fail(error);await finishRecording()}};rec.start(1000);r.rotate=setTimeout(()=>{if(r.recorder?.state==="recording")r.recorder.stop()},600000)}
+async function finishRecording(){const r=state.recording;if(!r)return;clearInterval(r.tick);clearTimeout(r.rotate);r.stream.getTracks().forEach(t=>t.stop());r.context.close().catch(()=>{});state.recording=null;els.recordBar.hidden=true;els.recordBtn.disabled=false;els.deleteBtn.disabled=false;[...els.markerButtons.children].forEach(b=>b.disabled=true);await renderAudio();toast("录音已保存")}
+function stopRecording(){const r=state.recording;if(!r)return;r.active=false;if(r.recorder?.state==="recording")r.recorder.stop();else finishRecording()}
+function renderRecording(){const r=state.recording;if(!r)return;els.recordTime.textContent=durationLabel(recordingElapsed());const data=new Uint8Array(r.analyser.frequencyBinCount);r.analyser.getByteFrequencyData(data);const bars=els.volume.querySelectorAll("i");if(!bars.length){for(let i=0;i<12;i++)els.volume.append(document.createElement("i"))}[...els.volume.children].forEach((bar,i)=>{const level=data[Math.min(data.length-1,Math.floor(i*data.length/12))]||0;bar.style.height=Math.max(5,level/255*34)+"px"})}
+const audioFor=id=>new Promise((ok,no)=>{const r=db.transaction("audio").objectStore("audio").index("meetingId").getAll(IDBKeyRange.only(id));r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+async function renderAudio(){const records=(await audioFor(state.meeting.id)).sort((a,b)=>a.start-b.start);if(state.audioUrl)URL.revokeObjectURL(state.audioUrl);if(!records.length){els.player.hidden=true;els.audioInfo.textContent="暂无录音";return}state.audioUrl=URL.createObjectURL(new Blob(records.map(a=>a.blob),{type:records[0].blob.type||"audio/webm"}));els.player.src=state.audioUrl;els.player.hidden=false;els.audioInfo.textContent=`${records.length} 个片段 · ${durationLabel(state.meeting.duration)}`}
+function renderDirectory(){const markers=[...(state.meeting?.markers||[])].sort((a,b)=>a.t-b.t),transcripts=[...(state.meeting?.transcript||[])].sort((a,b)=>a.t-b.t);els.directory.innerHTML=[...markers.map(x=>`<button class="entry" type="button" data-seek="${x.t}"><time>${durationLabel(x.t)}</time><span><b class="entry-label">${escape(x.label)}</b> ${escape(x.text||"")}</span></button>`),...transcripts.map(x=>`<button class="entry transcript-row" type="button" data-seek="${x.t}"><time>${durationLabel(x.t)}</time><span>${escape(x.s)}</span></button>`)].join("")||`<div class="tiny">暂无打点或转写</div>`}
+async function addMarker(label){if(!state.recording)return toast("录音时可以打点");const text=prompt(label+"说明（可留空）","")||"";state.meeting.markers=[...(state.meeting.markers||[]),{t:recordingElapsed(),label,text}];await persistMeeting();renderDirectory();toast(label+"已打点")}
+function seek(t){if(els.player.hidden)return toast("暂无录音");els.player.currentTime=(t||0)/1000;els.player.play().catch(()=>{});els.directory.querySelectorAll(".active").forEach(x=>x.classList.remove("active"))}
+async function responseError(r){throw new Error((await r.text()).slice(0,140)||("HTTP "+r.status))}
+async function transcribe(){const c=getConfig();if(!c.asrBaseURL||!c.apiKey||!c.asrModel)return toast("请先配置转写 Base URL、API Key 和模型");const records=(await audioFor(state.meeting.id)).sort((a,b)=>a.start-b.start);if(!records.length)return toast("暂无录音");els.transcribeBtn.disabled=true;els.transcribeBtn.textContent="转写中…";try{const out=[];for(let i=0;i<records.length;i++){els.audioStatus.textContent=`正在转写 ${i+1}/${records.length}`;const f=new FormData();f.append("file",new File([records[i].blob],"x.webm",{type:records[i].blob.type||"audio/webm"}));f.append("model",c.asrModel);f.append("response_format","verbose_json");if(c.hotwords)f.append("prompt",c.hotwords);const r=await fetch(endPoint(c.asrBaseURL,"/audio/transcriptions"),{method:"POST",headers:{Authorization:"Bearer "+c.apiKey},body:f});if(!r.ok)await responseError(r);const data=await r.json();if(data.segments?.length)data.segments.forEach(s=>out.push({t:records[i].start+Math.round((s.start||0)*1000),s:(s.text||"").trim()}));else if(data.text)out.push({t:records[i].start,s:data.text.trim()})}state.meeting.transcript=out.filter(x=>x.s).sort((a,b)=>a.t-b.t);await persistMeeting();renderDirectory();els.audioStatus.textContent="转写完成";toast("转写已写入时间戳目录")}catch(e){fail(e);els.audioStatus.textContent=""}finally{els.transcribeBtn.disabled=false;els.transcribeBtn.textContent="录音转写"}}
+async function chat(messages,c){const r=await fetch(endPoint(c.baseURL,"/chat/completions"),{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+c.apiKey},body:JSON.stringify({model:c.chatModel,messages})});if(!r.ok)await responseError(r);const data=await r.json(),text=data.choices?.[0]?.message?.content;if(typeof text!=="string"||!text.trim())throw new Error("接口未返回有效内容");return text.trim()}
+function sourceText(){const body=els.bodyInput.value.trim(),transcript=(state.meeting.transcript||[]).sort((a,b)=>a.t-b.t).map(x=>x.s).join("\n");return [body,transcript].filter(Boolean).join("\n\n")}
+async function generateNote(){const c=getConfig();if(!c.baseURL||!c.apiKey||!c.chatModel)return toast("请先配置笔记 Base URL、API Key 和模型");let text=sourceText();if(!text)return toast("没有可整理的内容");const prompt=state.meeting.mode==="course"?COURSE_PROMPT:MEETING_PROMPT;els.noteBtn.disabled=true;els.noteBtn.textContent="生成中…";els.noteStatus.textContent="正在整理…";try{if(text.length>2000){const summaries=[];for(let i=0;i<text.length;i+=1300){const part=text.slice(i,i+1500);summaries.push(await chat([{role:"system",content:prompt},{role:"user",content:"仅用不超过40字概括下面内容，只输出要点：\n"+part}],c))}text=summaries.join("\n")}state.meeting.note=await chat([{role:"system",content:prompt},{role:"user",content:(state.meeting.mode==="course"?"课堂内容：\n":"会议内容：\n")+text}],c);await persistMeeting();renderNote();els.noteStatus.textContent="笔记已生成"}catch(e){fail(e);els.noteStatus.textContent=""}finally{els.noteBtn.disabled=false;els.noteBtn.textContent="生成笔记"}}
+function inline(s){return escape(s).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>")}
+function markdown(src){const blocks=[];let s=String(src||"").replace(/```([\s\S]*?)```/g,(_,x)=>`@@${blocks.push(`<pre><code>${escape(x.trim())}</code></pre>`)-1}@@`);const lines=s.split(/\r?\n/);let out="",list=false;const close=()=>{if(list){out+="</ul>";list=false}};for(let i=0;i<lines.length;i++){const line=lines[i];if(/^@@\d+@@$/.test(line)){close();out+=blocks[Number(line.match(/\d+/)[0])];continue}const h=line.match(/^(#{2,4})\s+(.+)$/);if(h){close();out+=`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`;continue}if(/^\s*[-*]\s+/.test(line)){if(!list){out+="<ul>";list=true}out+=`<li>${inline(line.replace(/^\s*[-*]\s+/,""))}</li>`;continue}if(/^\s*\|.+\|\s*$/.test(line)&&/^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i+1]||"")){close();const rows=[];while(i<lines.length&&/^\s*\|.+\|\s*$/.test(lines[i])){const cells=lines[i].trim().replace(/^\||\|$/g,"").split("|").map(x=>x.trim());if(!/^[\s:|-]+$/.test(cells.join("")))rows.push(cells);i++}i--;out+="<table>"+rows.map((row,ri)=>`<tr>${row.map(x=>`<${ri?"td":"th"}>${inline(x)}</${ri?"td":"th"}>`).join("")}</tr>`).join("")+"</table>";continue}if(!line.trim()){close();continue}close();out+=`<p>${inline(line)}</p>`}close();return out||'<span class="tiny">暂无笔记</span>'}
+function renderNote(){els.noteView.innerHTML=state.meeting?.note?markdown(state.meeting.note):'<span class="tiny">暂无笔记</span>'}
+function meetingMarkdown(m){const course=state.courses.find(c=>c.id===m.courseId);const markers=(m.markers||[]).sort((a,b)=>a.t-b.t).map(x=>`- ${durationLabel(x.t)} [${x.label}] ${x.text||""}`).join("\n");const transcript=(m.transcript||[]).sort((a,b)=>a.t-b.t).map(x=>`**${durationLabel(x.t)}** ${x.s}`).join("\n\n");return `# ${m.title}\n\n- ${m.mode==="course"?"课程":"类型"}：${course?.name||"会议"}\n- 老师：${course?.teacher||""}\n- 日期：${m.date}\n- 时长：${durationLabel(m.duration)}\n\n## 时间戳目录\n\n${markers||"无"}\n\n## 速记正文\n\n${m.body||"无"}\n\n## 转写全文\n\n${transcript||"无"}\n\n## ${m.mode==="course"?"AI 笔记":"AI 纪要"}\n\n${m.note||"无"}\n`}
+function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+async function confirmDelete(){if(state.recording)return toast("请先结束录音");const first=confirm("确定删除这条记录吗？\n\n音频、转写和笔记都会一起删除。");if(!first||!confirm("请再次确认删除。"))return;const tx=db.transaction(["meetings","audio"],"readwrite");tx.objectStore("meetings").delete(state.meeting.id);const c=tx.objectStore("audio").index("meetingId").openCursor(IDBKeyRange.only(state.meeting.id));c.onsuccess=()=>{const x=c.result;if(x){x.delete();x.continue()}};await new Promise((ok,no)=>{tx.oncomplete=ok;tx.onerror=()=>no(tx.error)});if(state.audioUrl){URL.revokeObjectURL(state.audioUrl);state.audioUrl=""}state.meeting=null;await loadData();setView("home")}
+async function exportBackup(){const [meetings,courses,audio]=await Promise.all([all("meetings"),all("courses"),all("audio")]);const enc=await Promise.all(audio.map(async a=>({...a,blob:await blobUrl(a.blob)})));download(`课堂速记备份-${today()}.json`,JSON.stringify({version:2,meetings,courses,audio:enc,settings:getConfig()}),"application/json")}
+const blobUrl=b=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(r.error);r.readAsDataURL(b)});
+async function restoreBackup(e){const file=e.target.files[0];e.target.value="";if(!file||!confirm("恢复备份会覆盖当前全部数据，是否继续？"))return;try{const p=JSON.parse(await file.text());if(p.version!==2||!Array.isArray(p.meetings)||!Array.isArray(p.courses)||!Array.isArray(p.audio))throw new Error("备份格式不正确");const audio=await Promise.all(p.audio.map(async a=>({...a,blob:await(await fetch(a.blob)).blob()})));const tx=db.transaction(["meetings","courses","audio"],"readwrite");["meetings","courses","audio"].forEach(s=>tx.objectStore(s).clear());p.meetings.forEach(x=>tx.objectStore("meetings").put(x));p.courses.forEach(x=>tx.objectStore("courses").put(x));audio.forEach(x=>tx.objectStore("audio").put(x));await new Promise((ok,no)=>{tx.oncomplete=ok;tx.onerror=()=>no(tx.error)});if(p.settings)saveConfig(p.settings);await loadData();toast("备份已恢复")}catch(err){fail(err)}}
+async function clearAudio(){if(!confirm("清理全部音频并保留会议、转写和笔记？此操作不可撤销。"))return;await request(db.transaction("audio","readwrite").objectStore("audio").clear());for(const m of state.meetings){m.duration=0;m.chunks=0;await put("meetings",m)}await storageInfo();toast("全部音频已清理")}
+async function storageInfo(){try{const e=await navigator.storage.estimate();els.storageInfo.textContent=`已用 ${(e.usage/1024/1024).toFixed(1)} MB / 可用 ${(e.quota/1024/1024).toFixed(0)} MB`}catch{els.storageInfo.textContent="浏览器未提供存储统计"}}
+function fillSettings(){const c=getConfig();els.providerInput.value=c.provider||"custom";els.baseUrlInput.value=c.baseURL;els.asrBaseUrlInput.value=c.asrBaseURL;els.apiKeyInput.value=c.apiKey;els.chatModelInput.value=c.chatModel;els.asrModelInput.value=c.asrModel;els.hotwordsInput.value=c.hotwords;storageInfo()}
+function applyPreset(){const p=PRESETS[els.providerInput.value];if(!p)return;els.baseUrlInput.value=p.baseURL;els.asrBaseUrlInput.value=p.asrBaseURL;els.chatModelInput.value=p.chatModel;els.asrModelInput.value=p.asrModel}
+function bind(){[...els.markerButtons.children].forEach(b=>b.disabled=true);els.meetTab.onclick=()=>{state.mode="meet";renderHome()};els.courseTab.onclick=()=>{state.mode="course";renderHome()};els.searchInput.oninput=e=>{state.query=e.target.value;renderHome()};els.createBtn.onclick=()=>state.mode==="meet"?newMeeting("meet"):editCourse("");els.homeList.onclick=e=>{const open=e.target.closest("[data-open]"),add=e.target.closest("[data-add-lesson]"),edit=e.target.closest("[data-edit-course]");if(open)openDetail(open.dataset.open);if(add)newMeeting("course",add.dataset.addLesson);if(edit)editCourse(edit.dataset.editCourse)};els.backBtn.onclick=async()=>{if(state.recording)return toast("请先结束录音");stopSpeech();if(state.view==="detail"){await persistMeeting();await loadData()}setView("home")};els.settingsBtn.onclick=()=>{fillSettings();setView("settings")};els.courseForm.onsubmit=saveCourse;els.detailForm.oninput=scheduleSave;els.detailForm.onchange=scheduleSave;els.draftSpeechBtn.onclick=toggleDraftSpeech;els.draftApplyBtn.onclick=()=>{if(!els.draftInput.value.trim())return toast("草稿为空");els.bodyInput.value=els.draftInput.value;scheduleSave();toast("已覆盖正文")};els.recordBtn.onclick=startRecording;els.recordStopBtn.onclick=stopRecording;els.transcribeBtn.onclick=transcribe;els.noteBtn.onclick=generateNote;els.markerButtons.onclick=e=>{const b=e.target.closest("[data-label]");if(b)addMarker(b.dataset.label)};els.directory.onclick=e=>{const b=e.target.closest("[data-seek]");if(b){b.classList.add("active");seek(Number(b.dataset.seek))}};els.exportBtn.onclick=()=>{syncMeeting();download((state.meeting.title||"课堂速记").replace(/[\\/:*?"<>|]/g,"_")+".md",meetingMarkdown(state.meeting),"text/markdown")};els.deleteBtn.onclick=confirmDelete;els.backupBtn.onclick=exportBackup;els.restoreInput.onchange=restoreBackup;els.settingsForm.onsubmit=e=>{e.preventDefault();saveConfig({provider:els.providerInput.value,baseURL:els.baseUrlInput.value.trim().replace(/\/+$/,""),asrBaseURL:els.asrBaseUrlInput.value.trim().replace(/\/+$/,""),apiKey:els.apiKeyInput.value.trim(),chatModel:els.chatModelInput.value.trim(),asrModel:els.asrModelInput.value.trim(),hotwords:els.hotwordsInput.value.trim()});els.settingsStatus.textContent="设置已保存";toast("设置已保存")};els.providerInput.onchange=applyPreset;els.clearAudioBtn.onclick=clearAudio;window.onbeforeunload=()=>{if(state.meeting)syncMeeting();stopSpeech();if(state.audioUrl)URL.revokeObjectURL(state.audioUrl)}}
+async function init(){try{db=await openDB();await migrateOld();bind();await loadData();if("serviceWorker"in navigator){let refreshing=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload()}});navigator.serviceWorker.register("sw.js?v=2.0.0").then(r=>r.update()).catch(()=>{})}}catch(e){document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong><p>${escape(e?.message||String(e))}</p><p class="tiny">${location.protocol==="file:"?"请通过 HTTP 服务打开，不要双击 HTML。":"请在浏览器控制台查看完整错误。"}</p></div>`}}
+init();
 })();
 </script>
 </body>
