@@ -1,4 +1,4 @@
-const CACHE="meeting-notes-v0.1.3";
+const CACHE="meeting-notes-v0.1.4";
 const ASSETS=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 
 self.addEventListener("install",event=>{

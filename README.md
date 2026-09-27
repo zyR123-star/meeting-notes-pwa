@@ -17,6 +17,8 @@ python -m http.server 8080
 1. 在仓库 `Settings > Pages` 中选择 `Deploy from a branch`，分支选 `main`、目录选 `/ (root)`。
 2. 打开 `https://<用户名>.github.io/meeting-notes-pwa/`。
 
+更新流程与“经世词库”保持一致：改动直接提交到 `main`，GitHub Pages 自动重建；项目不使用 Release 或 Tag，`CHANGELOG.md` 作为提交历史之外的易读更新日志。
+
 ## 数据与隐私
 
 会议、录音和 AI 设置保存在浏览器 IndexedDB 中。使用“生成纪要”或“高精度转写”时，正文或录音会发送到用户配置的 OpenAI 兼容接口。JSON 备份包含 API Key，请妥善保管备份文件。

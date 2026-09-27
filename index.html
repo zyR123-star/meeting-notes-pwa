@@ -275,6 +275,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
           </label>
         </div>
         <div id="settingsStatus" class="status"></div>
+        <p class="tiny" style="margin:0">版本 0.1.4</p>
       </form>
     </section>
   </main>
@@ -813,7 +814,11 @@ button:disabled{opacity:.5;cursor:not-allowed}
       bindEvents();
       els.dateInput.value=today();
       await loadMeetings();
-      if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+      if("serviceWorker"in navigator){
+        let refreshing=false;
+        navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload();}});
+        navigator.serviceWorker.register("sw.js?v=0.1.4").then(registration=>registration.update()).catch(()=>{});
+      }
     }catch(error){
       document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong>${escapeHtml(error.message)}</div>`;
     }
