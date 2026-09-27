@@ -3,37 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#4F6EF7">
+<meta name="theme-color" content="#ff9fc4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>会议速记</title>
+<title>多多的会议速记</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
   color-scheme:light dark;
   --primary:#4F6EF7;
-  --primary-soft:#eef1ff;
-  --bg:#f5f7fb;
-  --surface:#fff;
-  --surface-2:#f8f9fc;
-  --text:#172033;
-  --muted:#697386;
-  --line:#e3e7ef;
+  --primary-soft:#edf0ff;
+  --pink:#ff8fba;
+  --pink-soft:#fff0f6;
+  --mint:#71cfb9;
+  --mint-soft:#ecfbf7;
+  --sun:#ffd56a;
+  --bg:#fff8fb;
+  --surface:#fffefe;
+  --surface-2:#fff7fa;
+  --text:#41374e;
+  --muted:#83768c;
+  --line:#f0dce5;
   --danger:#d93c4f;
   --success:#18865b;
-  --shadow:0 8px 30px rgba(26,38,70,.08);
+  --shadow:0 10px 28px rgba(128,73,107,.10);
 }
 @media(prefers-color-scheme:dark){
   :root{
     --primary:#8095ff;
-    --primary-soft:#242b50;
-    --bg:#11141d;
-    --surface:#1b1f2a;
-    --surface-2:#242936;
-    --text:#f4f6fb;
-    --muted:#aab2c3;
-    --line:#323847;
+    --primary-soft:#282b4d;
+    --pink:#ff9fc4;
+    --pink-soft:#3b2633;
+    --mint:#75d8c0;
+    --mint-soft:#1d3733;
+    --sun:#ffd978;
+    --bg:#15131b;
+    --surface:#211d28;
+    --surface-2:#2b2532;
+    --text:#fbf7fc;
+    --muted:#c1b7c7;
+    --line:#423747;
     --danger:#ff8291;
     --success:#68d6a6;
     --shadow:0 10px 32px rgba(0,0,0,.28);
@@ -46,6 +56,7 @@ body{
   margin:0;background:var(--bg);color:var(--text);line-height:1.55;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
 }
+::selection{background:#ffd2e5;color:#4a3550}
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 .app{width:min(100%,760px);min-height:100vh;margin:auto;padding:0 16px 32px}
@@ -54,7 +65,10 @@ button{cursor:pointer}
   min-height:68px;padding:calc(10px + env(safe-area-inset-top)) 0 10px;
   background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)
 }
-.topbar h1{flex:1;margin:0;font-size:20px;line-height:1.25}
+.brand-mascot{width:48px;height:48px;flex:none;filter:drop-shadow(0 4px 5px rgba(106,72,103,.12))}
+.brand-mascot svg{display:block;width:100%;height:100%}
+.title-copy{flex:1;min-width:0}
+.topbar h1{margin:0;font-size:20px;line-height:1.25}
 .topbar p{margin:2px 0 0;color:var(--muted);font-size:12px}
 .top-actions{display:flex;gap:8px}
 .icon-btn{
@@ -63,6 +77,19 @@ button{cursor:pointer}
 }
 .view{animation:enter .18s ease-out}
 @keyframes enter{from{opacity:.5;transform:translateY(4px)}}
+.welcome{
+  position:relative;display:flex;align-items:center;gap:12px;overflow:hidden;
+  margin:2px 0 14px;padding:16px;border:1px solid #ffd5e6;border-radius:8px;
+  background:var(--pink-soft)
+}
+.welcome::after{content:"✦";position:absolute;right:14px;top:10px;color:var(--sun);font-size:24px}
+.welcome-sticker{
+  width:48px;height:48px;flex:none;display:grid;place-items:center;color:#fff;font-size:25px;
+  background:var(--pink);border:2px solid color-mix(in srgb,var(--pink) 65%,#9d5879);border-radius:50%
+}
+.welcome span{display:block;color:var(--pink);font-size:10px;font-weight:800;letter-spacing:.12em}
+.welcome h2{margin:2px 0 0;font-size:16px;line-height:1.45}
+.welcome p{margin:3px 0 0;color:var(--muted);font-size:12px}
 .toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:14px}
 .search{position:relative}
 .search input{width:100%;padding-left:38px}
@@ -76,8 +103,8 @@ textarea{resize:vertical;min-height:180px;line-height:1.65}
 button.primary,button.secondary,button.danger,button.ghost{
   border:1px solid transparent;border-radius:8px;padding:10px 14px;font-weight:600
 }
-button.primary{background:var(--primary);color:#fff}
-button.secondary{background:var(--surface);border-color:var(--line)}
+button.primary{background:var(--primary);color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--primary) 25%,#37499e)}
+button.secondary{background:var(--surface);border-color:#f2cfdf}
 button.danger{background:color-mix(in srgb,var(--danger) 12%,var(--surface));color:var(--danger);border-color:color-mix(in srgb,var(--danger) 30%,var(--line))}
 button.ghost{background:transparent;border-color:var(--line);color:var(--muted)}
 button:disabled{opacity:.5;cursor:not-allowed}
@@ -86,17 +113,20 @@ button:disabled{opacity:.5;cursor:not-allowed}
   flex:none;border:1px solid var(--line);border-radius:999px;background:var(--surface);
   padding:6px 11px;color:var(--muted);font-size:13px
 }
-.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.chip.active{background:var(--pink);border-color:#e970a3;color:#fff}
 .cards{display:grid;gap:10px}
 .card{
-  border:1px solid var(--line);border-radius:8px;background:var(--surface);
+  position:relative;overflow:hidden;border:1px solid var(--line);border-top:3px solid var(--pink);border-radius:8px;background:var(--surface);
   padding:15px;box-shadow:0 1px 0 rgba(20,30,60,.02)
 }
+.card:nth-child(3n+2){border-top-color:var(--primary)}
+.card:nth-child(3n){border-top-color:var(--mint)}
+.card::after{content:"✦";position:absolute;right:11px;top:8px;color:#ffd56a;font-size:15px}
 .card:active{transform:scale(.995)}
 .card h2{margin:0 0 7px;font-size:17px;line-height:1.35}
 .meta{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:5px 12px}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.tag{font-size:12px;color:var(--primary);background:var(--primary-soft);border-radius:999px;padding:3px 8px}
+.tag{font-size:12px;color:#a44f75;background:var(--pink-soft);border-radius:999px;padding:3px 8px}
 .empty{padding:54px 16px;text-align:center;color:var(--muted)}
 .empty strong{display:block;color:var(--text);font-size:18px;margin-bottom:6px}
 .form{display:grid;gap:15px}
@@ -117,6 +147,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .preview code{background:var(--surface-2);padding:2px 5px;border-radius:4px}
 .preview pre{background:var(--surface-2);padding:12px;border-radius:6px;overflow:auto}
 .panel{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:14px;display:grid;gap:12px}
+.panel h2::before,.field>span::before{content:"";display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:50%;background:var(--pink);vertical-align:2px}
 .panel h2{margin:0;font-size:16px}
 .actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
 .actions .grow{flex:1}
@@ -129,7 +160,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .toast{
   position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));z-index:30;
   max-width:calc(100% - 32px);transform:translate(-50%,18px);opacity:0;pointer-events:none;
-  background:#182033;color:#fff;border-radius:8px;padding:10px 14px;box-shadow:var(--shadow);
+  background:#54435b;color:#fff;border-radius:8px;padding:10px 14px;box-shadow:var(--shadow);
   transition:.2s
 }
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -144,9 +175,18 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <div class="app">
   <header class="topbar">
     <button id="backBtn" class="icon-btn" type="button" aria-label="返回" hidden>←</button>
-    <div>
-      <h1 id="pageTitle">会议速记</h1>
-      <p id="pageSub">记录、复盘、推进</p>
+    <div class="brand-mascot" aria-hidden="true">
+      <svg viewBox="0 0 64 64">
+        <path d="M15 47C7 47 3 41 5 35c1-5 5-8 10-8 2-11 18-16 25-6 8-2 14 4 14 11 0 9-7 15-16 15H15z" fill="#fff" stroke="#5b526b" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="24" cy="36" r="2.5" fill="#5b526b"/><circle cx="40" cy="36" r="2.5" fill="#5b526b"/>
+        <path d="M27 42c3 3 7 3 10 0" fill="none" stroke="#5b526b" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M43 13c-6-6-11 1-4 6-7 5-2 11 4 6 6 5 11-1 4-6 7-5 2-12-4-6z" fill="#ff8fba" stroke="#b75c83" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M12 22l1.5 3 3 .8-3 1.5-.8 3-1.5-3-3-.8 3-1.5z" fill="#ffd56a"/>
+      </svg>
+    </div>
+    <div class="title-copy">
+      <h1 id="pageTitle">多多的会议速记</h1>
+      <p id="pageSub">把重要的话好好收起来</p>
     </div>
     <div class="top-actions">
       <button id="settingsBtn" class="icon-btn" type="button" aria-label="设置">⚙</button>
@@ -155,6 +195,10 @@ button:disabled{opacity:.5;cursor:not-allowed}
 
   <main>
     <section id="listView" class="view">
+      <div class="welcome">
+        <div class="welcome-sticker">♡</div>
+        <div><span>DUODUO'S NOTEBOOK</span><h2>多多，今天也要把重要的话收好呀。</h2><p>小小记录，也会慢慢闪闪发光。</p></div>
+      </div>
       <div class="toolbar">
         <label class="search"><input id="searchInput" type="search" placeholder="搜索标题、参会人、标签或正文"></label>
         <button id="newBtn" class="primary" type="button">＋ 新建会议</button>
@@ -391,8 +435,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
     els.settingsView.hidden=name!=="settings";
     els.backBtn.hidden=isList;
     els.settingsBtn.hidden=!isList;
-    els.pageTitle.textContent=name==="settings"?"设置":name==="edit"?(state.current?.id?"编辑会议":"新建会议"):"会议速记";
-    els.pageSub.textContent=name==="settings"?"AI 接口与数据备份":name==="edit"?"支持 Markdown 与语音速记":"记录、复盘、推进";
+    els.pageTitle.textContent=name==="settings"?"设置":name==="edit"?(state.current?.id?"编辑会议":"新建会议"):"多多的会议速记";
+    els.pageSub.textContent=name==="settings"?"AI 接口与数据备份":name==="edit"?"支持 Markdown 与语音速记":"把重要的话好好收起来";
   }
   async function loadMeetings(){
     state.meetings=(await getAll("meetings")).sort((a,b)=>b.date.localeCompare(a.date)||b.updatedAt.localeCompare(a.updatedAt));
@@ -669,7 +713,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
       const [meetings,recordings,settings]=await Promise.all([getAll("meetings"),getAll("recordings"),getAll("settings")]);
       const encoded=await Promise.all(recordings.map(async item=>({...item,blob:await blobToDataUrl(item.blob)})));
       const payload={version:1,exportedAt:new Date().toISOString(),meetings,recordings:encoded,settings};
-      download(`会议速记备份-${today()}.json`,JSON.stringify(payload),"application/json");
+      download(`多多速记备份-${today()}.json`,JSON.stringify(payload),"application/json");
       setStatus(els.settingsStatus,`已导出 ${meetings.length} 条会议和 ${recordings.length} 段录音。`);
     }catch(error){setStatus(els.settingsStatus,`导出失败：${error.message}`,true);}
   }

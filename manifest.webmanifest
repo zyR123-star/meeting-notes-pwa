@@ -1,14 +1,14 @@
 {
-  "name": "会议速记",
-  "short_name": "会议速记",
-  "description": "离线可用的会议记录、录音与 AI 纪要工具",
+  "name": "多多的会议速记",
+  "short_name": "多多速记",
+  "description": "为多多准备的离线会议记录、录音与 AI 纪要工具",
   "lang": "zh-CN",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#f5f7fb",
-  "theme_color": "#4F6EF7",
+  "background_color": "#fff8fb",
+  "theme_color": "#ff9fc4",
   "icons": [
     {
       "src": "icon-192.png",
