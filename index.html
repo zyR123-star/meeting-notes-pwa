@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4F6EF7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>会议速记</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  color-scheme:light dark;
+  --primary:#4F6EF7;
+  --primary-soft:#eef1ff;
+  --bg:#f5f7fb;
+  --surface:#fff;
+  --surface-2:#f8f9fc;
+  --text:#172033;
+  --muted:#697386;
+  --line:#e3e7ef;
+  --danger:#d93c4f;
+  --success:#18865b;
+  --shadow:0 8px 30px rgba(26,38,70,.08);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --primary:#8095ff;
+    --primary-soft:#242b50;
+    --bg:#11141d;
+    --surface:#1b1f2a;
+    --surface-2:#242936;
+    --text:#f4f6fb;
+    --muted:#aab2c3;
+    --line:#323847;
+    --danger:#ff8291;
+    --success:#68d6a6;
+    --shadow:0 10px 32px rgba(0,0,0,.28);
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);line-height:1.55;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{width:min(100%,760px);min-height:100vh;margin:auto;padding:0 16px 32px}
+.topbar{
+  position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;
+  min-height:68px;padding:calc(10px + env(safe-area-inset-top)) 0 10px;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px)
+}
+.topbar h1{flex:1;margin:0;font-size:20px;line-height:1.25}
+.topbar p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.top-actions{display:flex;gap:8px}
+.icon-btn{
+  width:40px;height:40px;border:1px solid var(--line);border-radius:8px;
+  background:var(--surface);display:grid;place-items:center;font-size:20px
+}
+.view{animation:enter .18s ease-out}
+@keyframes enter{from{opacity:.5;transform:translateY(4px)}}
+.toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:14px}
+.search{position:relative}
+.search input{width:100%;padding-left:38px}
+.search::before{content:"⌕";position:absolute;left:13px;top:8px;color:var(--muted);font-size:22px;z-index:1}
+input,textarea,select{
+  width:100%;border:1px solid var(--line);border-radius:8px;background:var(--surface);
+  padding:11px 12px;outline:none
+}
+input:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 16%,transparent)}
+textarea{resize:vertical;min-height:180px;line-height:1.65}
+button.primary,button.secondary,button.danger,button.ghost{
+  border:1px solid transparent;border-radius:8px;padding:10px 14px;font-weight:600
+}
+button.primary{background:var(--primary);color:#fff}
+button.secondary{background:var(--surface);border-color:var(--line)}
+button.danger{background:color-mix(in srgb,var(--danger) 12%,var(--surface));color:var(--danger);border-color:color-mix(in srgb,var(--danger) 30%,var(--line))}
+button.ghost{background:transparent;border-color:var(--line);color:var(--muted)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}
+.chip{
+  flex:none;border:1px solid var(--line);border-radius:999px;background:var(--surface);
+  padding:6px 11px;color:var(--muted);font-size:13px
+}
+.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.cards{display:grid;gap:10px}
+.card{
+  border:1px solid var(--line);border-radius:8px;background:var(--surface);
+  padding:15px;box-shadow:0 1px 0 rgba(20,30,60,.02)
+}
+.card:active{transform:scale(.995)}
+.card h2{margin:0 0 7px;font-size:17px;line-height:1.35}
+.meta{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:5px 12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:12px;color:var(--primary);background:var(--primary-soft);border-radius:999px;padding:3px 8px}
+.empty{padding:54px 16px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--text);font-size:18px;margin-bottom:6px}
+.form{display:grid;gap:15px}
+.field{display:grid;gap:6px}
+.field>span,.section-title{font-size:13px;font-weight:700;color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.body-head,.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.segmented{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.segmented button{border:0;background:var(--surface);padding:7px 11px;color:var(--muted)}
+.segmented button.active{background:var(--primary);color:#fff}
+.preview{
+  min-height:180px;padding:14px;border:1px solid var(--line);border-radius:8px;
+  background:var(--surface);overflow-wrap:anywhere
+}
+.preview>:first-child{margin-top:0}.preview>:last-child{margin-bottom:0}
+.preview table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}
+.preview th,.preview td{border:1px solid var(--line);padding:7px;text-align:left}
+.preview code{background:var(--surface-2);padding:2px 5px;border-radius:4px}
+.preview pre{background:var(--surface-2);padding:12px;border-radius:6px;overflow:auto}
+.panel{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:14px;display:grid;gap:12px}
+.panel h2{margin:0;font-size:16px}
+.actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.actions .grow{flex:1}
+.recording{display:grid;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
+.recording:first-of-type{border-top:0}
+.recording audio{width:100%;height:38px}
+.tiny{font-size:12px;color:var(--muted)}
+.status{min-height:20px;color:var(--muted);font-size:13px;white-space:pre-wrap}
+.summary-output{min-height:120px}
+.toast{
+  position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));z-index:30;
+  max-width:calc(100% - 32px);transform:translate(-50%,18px);opacity:0;pointer-events:none;
+  background:#182033;color:#fff;border-radius:8px;padding:10px 14px;box-shadow:var(--shadow);
+  transition:.2s
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:420px){
+  .toolbar{grid-template-columns:1fr}
+  .toolbar .primary{min-height:43px}
+  .row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <button id="backBtn" class="icon-btn" type="button" aria-label="返回" hidden>←</button>
+    <div>
+      <h1 id="pageTitle">会议速记</h1>
+      <p id="pageSub">记录、复盘、推进</p>
+    </div>
+    <div class="top-actions">
+      <button id="settingsBtn" class="icon-btn" type="button" aria-label="设置">⚙</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="listView" class="view">
+      <div class="toolbar">
+        <label class="search"><input id="searchInput" type="search" placeholder="搜索标题、参会人、标签或正文"></label>
+        <button id="newBtn" class="primary" type="button">＋ 新建会议</button>
+      </div>
+      <div id="tagFilters" class="chips"></div>
+      <div id="meetingList" class="cards"></div>
+      <div id="listEmpty" class="empty" hidden><strong>还没有会议记录</strong>新建一条，开始速记。</div>
+    </section>
+
+    <section id="editView" class="view" hidden>
+      <form id="meetingForm" class="form">
+        <label class="field"><span>标题</span><input id="titleInput" required maxlength="120" placeholder="会议标题"></label>
+        <label class="field"><span>日期</span><input id="dateInput" type="date" required></label>
+        <label class="field"><span>参会人（逗号分隔）</span><input id="attendeesInput" placeholder="张三, 李四"></label>
+        <label class="field"><span>标签（逗号分隔）</span><input id="tagsInput" placeholder="项目, 周会"></label>
+
+        <div class="field">
+          <div class="body-head">
+            <span>正文（Markdown）</span>
+            <div class="actions">
+              <button id="speechBtn" class="secondary" type="button">开始语音</button>
+              <div class="segmented">
+                <button id="editTab" class="active" type="button">编辑</button>
+                <button id="previewTab" type="button">预览</button>
+              </div>
+            </div>
+          </div>
+          <textarea id="bodyInput" placeholder="# 会议记录&#10;&#10;输入内容，或点击“开始语音”。"></textarea>
+          <div id="bodyPreview" class="preview" hidden></div>
+          <div id="speechStatus" class="status"></div>
+        </div>
+
+        <section id="summaryPanel" class="panel" hidden>
+          <div class="section-head">
+            <h2>AI 纪要</h2>
+            <button id="summaryBtn" class="secondary" type="button">生成纪要</button>
+          </div>
+          <div id="summaryStatus" class="status"></div>
+          <textarea id="summaryOutput" class="summary-output" hidden placeholder="生成的 Markdown 纪要"></textarea>
+          <button id="appendSummaryBtn" class="ghost" type="button" hidden>追加到正文末尾</button>
+        </section>
+
+        <section id="recordPanel" class="panel" hidden>
+          <div class="section-head">
+            <h2>录音</h2>
+            <button id="recordBtn" class="secondary" type="button">开始录音</button>
+          </div>
+          <div id="recordStatus" class="status"></div>
+          <div id="recordings"></div>
+        </section>
+
+        <div class="actions">
+          <button class="primary grow" type="submit">保存会议</button>
+          <button id="exportMdBtn" class="secondary" type="button" hidden>导出 Markdown</button>
+          <button id="deleteMeetingBtn" class="danger" type="button" hidden>删除会议</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="settingsView" class="view" hidden>
+      <form id="settingsForm" class="form">
+        <label class="field"><span>Base URL</span><input id="baseUrlInput" type="url" placeholder="https://api.example.com/v1"></label>
+        <label class="field"><span>API Key</span><input id="apiKeyInput" type="password" autocomplete="off" placeholder="sk-..."></label>
+        <label class="field"><span>模型</span><input id="modelInput" placeholder="模型名称"></label>
+        <div class="actions">
+          <button class="primary" type="submit">保存设置</button>
+          <button id="backupBtn" class="secondary" type="button">导出全量 JSON</button>
+          <label class="secondary" style="border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-weight:600">
+            恢复备份<input id="restoreInput" type="file" accept=".json,application/json" hidden>
+          </label>
+        </div>
+        <div id="settingsStatus" class="status"></div>
+      </form>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+(()=>{
+  "use strict";
+  const DB_NAME="meeting-notes-db";
+  const DB_VERSION=1;
+  const SYSTEM_PROMPT="将会议内容整理为Markdown纪要,含:##摘要(≤100字)/##关键决议/##待办(表格:事项|负责人|截止)/##风险,语言与原文一致";
+  const $=id=>document.getElementById(id);
+  const els=Object.fromEntries(["backBtn","settingsBtn","pageTitle","pageSub","listView","searchInput","newBtn","tagFilters","meetingList","listEmpty","editView","meetingForm","titleInput","dateInput","attendeesInput","tagsInput","bodyInput","bodyPreview","speechBtn","editTab","previewTab","speechStatus","summaryPanel","summaryBtn","summaryStatus","summaryOutput","appendSummaryBtn","recordPanel","recordBtn","recordStatus","recordings","exportMdBtn","deleteMeetingBtn","settingsView","settingsForm","baseUrlInput","apiKeyInput","modelInput","backupBtn","restoreInput","settingsStatus","toast"].map(id=>[id,$(id)]));
+  const state={meetings:[],current:null,recordings:[],playbackUrls:new Set(),query:"",tag:"",speech:null,speechListening:false,speechPrefix:"",speechCommitted:"",speechSuffix:"",recorder:null,chunks:[],recordStartedAt:0,recordTimer:null};
+  let db;
+
+  function request(req){
+    return new Promise((resolve,reject)=>{
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error);
+    });
+  }
+  function transactionDone(tx){
+    return new Promise((resolve,reject)=>{
+      tx.oncomplete=resolve;
+      tx.onerror=()=>reject(tx.error);
+      tx.onabort=()=>reject(tx.error);
+    });
+  }
+  function openDatabase(){
+    return new Promise((resolve,reject)=>{
+      const req=indexedDB.open(DB_NAME,DB_VERSION);
+      req.onupgradeneeded=()=>{
+        const database=req.result;
+        if(!database.objectStoreNames.contains("meetings")) database.createObjectStore("meetings",{keyPath:"id"});
+        if(!database.objectStoreNames.contains("recordings")){
+          const store=database.createObjectStore("recordings",{keyPath:"id"});
+          store.createIndex("meetingId","meetingId");
+        }
+        if(!database.objectStoreNames.contains("settings")) database.createObjectStore("settings",{keyPath:"key"});
+      };
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error);
+    });
+  }
+  const getAll=store=>request(db.transaction(store).objectStore(store).getAll());
+  const getOne=(store,key)=>request(db.transaction(store).objectStore(store).get(key));
+  const putOne=(store,value)=>request(db.transaction(store,"readwrite").objectStore(store).put(value));
+  function getRecordings(meetingId){
+    const store=db.transaction("recordings").objectStore("recordings");
+    return request(store.index("meetingId").getAll(IDBKeyRange.only(meetingId)));
+  }
+  function deleteMeeting(meetingId){
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(["meetings","recordings"],"readwrite");
+      tx.objectStore("meetings").delete(meetingId);
+      const cursor=tx.objectStore("recordings").index("meetingId").openCursor(IDBKeyRange.only(meetingId));
+      cursor.onsuccess=()=>{const item=cursor.result;if(item){item.delete();item.continue();}};
+      tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);
+    });
+  }
+  function uid(){
+    return crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  }
+  function splitList(value){
+    return [...new Set(value.split(/[,，]/).map(item=>item.trim()).filter(Boolean))];
+  }
+  function today(){
+    const d=new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function formatDate(value){
+    if(!value)return "未设置日期";
+    const [y,m,d]=value.split("-").map(Number);
+    return `${y}年${m}月${d}日`;
+  }
+  function formatTime(seconds){
+    const m=Math.floor(seconds/60).toString().padStart(2,"0");
+    const s=Math.floor(seconds%60).toString().padStart(2,"0");
+    return `${m}:${s}`;
+  }
+  function toast(message){
+    els.toast.textContent=message;
+    els.toast.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer=setTimeout(()=>els.toast.classList.remove("show"),2200);
+  }
+  function confirmTwice(message){
+    return window.confirm(`${message}\n\n此操作不可撤销，是否继续？`) && window.confirm("请再次确认删除。");
+  }
+  function setStatus(el,text,error=false){
+    el.textContent=text;
+    el.style.color=error?"var(--danger)":"var(--muted)";
+  }
+  function escapeHtml(value){
+    return value.replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  }
+  function inlineMarkdown(value){
+    let text=escapeHtml(value);
+    text=text.replace(/`([^`]+)`/g,"<code>$1</code>");
+    text=text.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+    text=text.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+    text=text.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return text;
+  }
+  // 轻量 Markdown：支持标题、列表、引用、代码、链接、粗体和纪要表格。
+  function markdown(value){
+    const blocks=[];
+    let source=value.replace(/```([\s\S]*?)```/g,(_,code)=>`@@CODE${blocks.push(`<pre><code>${escapeHtml(code.trim())}</code></pre>`)-1}@@`);
+    const lines=source.split(/\r?\n/);
+    let html="",listType="";
+    const closeList=()=>{if(listType){html+=`</${listType}>`;listType="";}};
+    for(let i=0;i<lines.length;i++){
+      const line=lines[i];
+      if(/^@@CODE\d+@@$/.test(line.trim())){closeList();html+=blocks[Number(line.match(/\d+/)[0])];continue;}
+      if(/^\s*\|.*\|\s*$/.test(line)&&/^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i+1]||"")){
+        closeList();
+        const rows=[];
+        while(i<lines.length&&/^\s*\|.*\|\s*$/.test(lines[i])){
+          const cells=lines[i].trim().replace(/^\||\|$/g,"").split("|").map(cell=>cell.trim());
+          if(!/^[\s:|-]+$/.test(cells.join("")))rows.push(cells);
+          i++;
+        }
+        i--;
+        html+="<table>";
+        rows.forEach((cells,row)=>{
+          const tag=row===0?"th":"td";
+          html+=`<tr>${cells.map(cell=>`<${tag}>${inlineMarkdown(cell)}</${tag}>`).join("")}</tr>`;
+        });
+        html+="</table>";continue;
+      }
+      const heading=line.match(/^(#{1,6})\s+(.+)$/);
+      if(heading){closeList();const level=heading[1].length;html+=`<h${level}>${inlineMarkdown(heading[2])}</h${level}>`;continue;}
+      const unordered=line.match(/^\s*[-*]\s+(.+)$/);
+      const ordered=line.match(/^\s*\d+\.\s+(.+)$/);
+      if(unordered||ordered){
+        const wanted=unordered?"ul":"ol";
+        if(listType!==wanted){closeList();listType=wanted;html+=`<${wanted}>`;}
+        html+=`<li>${inlineMarkdown((unordered||ordered)[1])}</li>`;continue;
+      }
+      if(/^\s*>\s?/.test(line)){closeList();html+=`<blockquote>${inlineMarkdown(line.replace(/^\s*>\s?/,""))}</blockquote>`;continue;}
+      if(!line.trim()){closeList();continue;}
+      closeList();html+=`<p>${inlineMarkdown(line)}</p>`;
+    }
+    closeList();return html||"<p class='tiny'>暂无内容</p>";
+  }
+  function download(filename,content,type){
+    const blob=new Blob([content],{type});
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+    link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function meetingMarkdown(meeting){
+    return `# ${meeting.title}\n\n- 日期：${meeting.date}\n- 参会人：${meeting.attendees.join("、")||"无"}\n- 标签：${meeting.tags.join("、")||"无"}\n\n${meeting.body||""}\n`;
+  }
+  function showView(name){
+    const isList=name==="list";
+    els.listView.hidden=!isList;
+    els.editView.hidden=name!=="edit";
+    els.settingsView.hidden=name!=="settings";
+    els.backBtn.hidden=isList;
+    els.settingsBtn.hidden=!isList;
+    els.pageTitle.textContent=name==="settings"?"设置":name==="edit"?(state.current?.id?"编辑会议":"新建会议"):"会议速记";
+    els.pageSub.textContent=name==="settings"?"AI 接口与数据备份":name==="edit"?"支持 Markdown 与语音速记":"记录、复盘、推进";
+  }
+  async function loadMeetings(){
+    state.meetings=(await getAll("meetings")).sort((a,b)=>b.date.localeCompare(a.date)||b.updatedAt.localeCompare(a.updatedAt));
+    renderList();
+  }
+  function renderList(){
+    const tags=[...new Set(state.meetings.flatMap(item=>item.tags||[]))].sort((a,b)=>a.localeCompare(b,"zh-CN"));
+    els.tagFilters.innerHTML=["全部",...tags].map(tag=>{
+      const value=tag==="全部"?"":tag;
+      return `<button class="chip ${state.tag===value?"active":""}" type="button" data-tag="${escapeHtml(value)}">${escapeHtml(tag)}</button>`;
+    }).join("");
+    const query=state.query.trim().toLowerCase();
+    const filtered=state.meetings.filter(item=>{
+      const haystack=[item.title,...(item.attendees||[]),...(item.tags||[]),item.body||""].join(" ").toLowerCase();
+      return (!query||haystack.includes(query))&&(!state.tag||(item.tags||[]).includes(state.tag));
+    });
+    els.meetingList.innerHTML=filtered.map(item=>`
+      <article class="card" data-id="${escapeHtml(item.id)}" tabindex="0">
+        <h2>${escapeHtml(item.title)}</h2>
+        <div class="meta"><span>${formatDate(item.date)}</span><span>${escapeHtml((item.attendees||[]).join("、")||"未填写参会人")}</span></div>
+        ${item.tags?.length?`<div class="tags">${item.tags.map(tag=>`<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>`:""}
+      </article>`).join("");
+    els.listEmpty.hidden=filtered.length>0;
+    els.listEmpty.innerHTML=state.meetings.length?"<strong>没有匹配的会议</strong>试试其他关键词或标签。":"<strong>还没有会议记录</strong>新建一条，开始速记。";
+  }
+  async function openEditor(id=""){
+    stopSpeech();
+    clearPlaybackUrls();
+    state.current=id?state.meetings.find(item=>item.id===id):null;
+    const meeting=state.current||{id:"",title:"",date:today(),attendees:[],tags:[],body:"",createdAt:"",updatedAt:""};
+    els.titleInput.value=meeting.title;
+    els.dateInput.value=meeting.date;
+    els.attendeesInput.value=meeting.attendees.join(", ");
+    els.tagsInput.value=meeting.tags.join(", ");
+    els.bodyInput.value=meeting.body;
+    els.summaryPanel.hidden=!meeting.id;
+    els.summaryOutput.hidden=true;
+    els.appendSummaryBtn.hidden=true;
+    els.summaryOutput.value="";
+    setStatus(els.summaryStatus,"");
+    els.recordPanel.hidden=!meeting.id;
+    els.exportMdBtn.hidden=!meeting.id;
+    els.deleteMeetingBtn.hidden=!meeting.id;
+    showEditorTab("edit");
+    showView("edit");
+    if(meeting.id)await loadRecordingView(meeting.id);
+    else{state.recordings=[];renderRecordings();}
+  }
+  function meetingFromForm(previous){
+    return {
+      id:previous?.id||uid(),
+      title:els.titleInput.value.trim(),
+      date:els.dateInput.value,
+      attendees:splitList(els.attendeesInput.value),
+      tags:splitList(els.tagsInput.value),
+      body:els.bodyInput.value.trim(),
+      createdAt:previous?.createdAt||new Date().toISOString(),
+      updatedAt:new Date().toISOString()
+    };
+  }
+  function showEditorTab(tab){
+    const preview=tab==="preview";
+    els.bodyInput.hidden=preview;
+    els.bodyPreview.hidden=!preview;
+    els.previewTab.classList.toggle("active",preview);
+    els.editTab.classList.toggle("active",!preview);
+    if(preview)els.bodyPreview.innerHTML=markdown(els.bodyInput.value);
+  }
+  async function saveMeeting(event){
+    event.preventDefault();
+    const previous=state.current;
+    if(!els.titleInput.value.trim()){toast("请填写会议标题");return;}
+    if(!els.dateInput.value){toast("请选择会议日期");return;}
+    const meeting=meetingFromForm(previous);
+    await putOne("meetings",meeting);
+    state.current=meeting;
+    await loadMeetings();
+    els.summaryPanel.hidden=false;
+    els.recordPanel.hidden=false;
+    els.exportMdBtn.hidden=false;
+    els.deleteMeetingBtn.hidden=false;
+    els.pageTitle.textContent="编辑会议";
+    toast("会议已保存");
+    await loadRecordingView(meeting.id);
+  }
+  async function removeCurrentMeeting(){
+    if(!state.current?.id||!confirmTwice(`确定删除“${state.current.title}”及其录音吗？`))return;
+    stopSpeech();
+    await deleteMeeting(state.current.id);
+    state.current=null;
+    await loadMeetings();
+    showView("list");
+    toast("会议已删除");
+  }
+
+  function showSpeechStatus(text,error=false){
+    setStatus(els.speechStatus,text,error);
+  }
+  function updateSpeechText(){
+    els.bodyInput.value=state.speechPrefix+state.speechCommitted+state.speechInterim+state.speechSuffix;
+    const caret=state.speechPrefix.length+state.speechCommitted.length+state.speechInterim.length;
+    els.bodyInput.setSelectionRange(caret,caret);
+  }
+  function finalizeSpeech(){
+    if(!state.speech)return;
+    state.speech=null;
+    state.speechPrefix+=state.speechCommitted+state.speechInterim;
+    state.speechCommitted="";state.speechInterim="";state.speechSuffix="";
+    els.speechBtn.textContent="开始语音";
+    showSpeechStatus("");
+  }
+  function toggleSpeech(){
+    if(state.speechListening){state.speechListening=false;state.speech?.stop();return;}
+    const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!Recognition){showSpeechStatus("当前浏览器不支持语音识别，请使用最新版 Safari 或 Chrome。",true);return;}
+    const recognition=new Recognition();
+    state.speech=recognition;
+    state.speechListening=true;
+    state.speechPrefix=els.bodyInput.value.slice(0,els.bodyInput.selectionStart);
+    state.speechSuffix=els.bodyInput.value.slice(els.bodyInput.selectionEnd);
+    state.speechCommitted="";state.speechInterim="";
+    recognition.lang="zh-CN";recognition.continuous=true;recognition.interimResults=true;
+    recognition.onstart=()=>{els.speechBtn.textContent="停止语音";showSpeechStatus("正在听写…");};
+    recognition.onresult=event=>{
+      for(let i=event.resultIndex;i<event.results.length;i++){
+        const text=event.results[i][0].transcript;
+        if(event.results[i].isFinal)state.speechCommitted+=text;
+        else state.speechInterim+=text;
+      }
+      updateSpeechText();
+    };
+    recognition.onerror=event=>{
+      if(!["no-speech","aborted"].includes(event.error))showSpeechStatus(`语音识别失败：${event.error}`,true);
+    };
+    recognition.onend=()=>{
+      if(state.speechListening){setTimeout(()=>{try{recognition.start();}catch{}},250);}
+      else finalizeSpeech();
+    };
+    try{recognition.start();}catch(error){state.speechListening=false;showSpeechStatus(`无法启动语音识别：${error.message}`,true);}
+  }
+  function stopSpeech(){
+    if(!state.speech)return;
+    state.speechListening=false;
+    try{state.speech.stop();}catch{}
+    finalizeSpeech();
+  }
+
+  async function loadRecordingView(meetingId){
+    state.recordings=await getRecordings(meetingId);
+    state.recordings.sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+    renderRecordings();
+  }
+  function clearPlaybackUrls(){
+    state.playbackUrls.forEach(url=>URL.revokeObjectURL(url));
+    state.playbackUrls.clear();
+  }
+  function renderRecordings(){
+    clearPlaybackUrls();
+    els.recordings.innerHTML=state.recordings.map(item=>{
+      const url=URL.createObjectURL(item.blob);
+      state.playbackUrls.add(url);
+      return `<div class="recording">
+        <div class="tiny">${new Date(item.createdAt).toLocaleString("zh-CN")} · ${formatTime(item.duration)}</div>
+        <audio controls preload="metadata" src="${url}"></audio>
+        <button class="ghost delete-recording" type="button" data-id="${escapeHtml(item.id)}">删除录音</button>
+      </div>`;
+    }).join("");
+  }
+  function bestRecordingMime(){
+    const types=["audio/webm;codecs=opus","audio/mp4","audio/webm","audio/ogg;codecs=opus"];
+    return types.find(type=>MediaRecorder.isTypeSupported(type))||"";
+  }
+  async function toggleRecording(){
+    if(state.recorder?.state==="recording"){state.recorder.stop();return;}
+    if(!state.current?.id){toast("请先保存会议");return;}
+    if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){showRecordingStatus("当前浏览器不支持录音。",true);return;}
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const mimeType=bestRecordingMime();
+      state.recorder=new MediaRecorder(stream,mimeType?{mimeType}:undefined);
+      state.chunks=[];state.recordStartedAt=Date.now();
+      state.recorder.ondataavailable=event=>{if(event.data.size)state.chunks.push(event.data);};
+      state.recorder.onstop=async()=>{
+        clearInterval(state.recordTimer);
+        showRecordingStatus("正在保存录音…");
+        const duration=Math.max(1,Math.round((Date.now()-state.recordStartedAt)/1000));
+        const blob=new Blob(state.chunks,{type:state.recorder.mimeType||mimeType||"audio/webm"});
+        stream.getTracks().forEach(track=>track.stop());
+        await putOne("recordings",{id:uid(),meetingId:state.current.id,blob,duration,createdAt:new Date().toISOString()});
+        state.recorder=null;els.recordBtn.textContent="开始录音";
+        await loadRecordingView(state.current.id);
+        showRecordingStatus("");
+        toast("录音已保存");
+      };
+      state.recorder.start();
+      els.recordBtn.textContent="停止录音";
+      state.recordTimer=setInterval(()=>{
+        showRecordingStatus(`录音中 ${formatTime((Date.now()-state.recordStartedAt)/1000)}`);
+      },500);
+      showRecordingStatus("录音中 00:00");
+    }catch(error){showRecordingStatus(`无法开始录音：${error.message}`,true);}
+  }
+  function showRecordingStatus(text,error=false){setStatus(els.recordStatus,text,error);}
+  async function removeRecording(id){
+    if(!confirmTwice("确定删除这段录音吗？"))return;
+    await request(db.transaction("recordings","readwrite").objectStore("recordings").delete(id));
+    await loadRecordingView(state.current.id);
+    toast("录音已删除");
+  }
+
+  async function loadSettings(){
+    const settings=(await getOne("settings","ai"))||{baseURL:"",apiKey:"",model:""};
+    els.baseUrlInput.value=settings.baseURL;
+    els.apiKeyInput.value=settings.apiKey;
+    els.modelInput.value=settings.model;
+  }
+  async function saveSettings(event){
+    event.preventDefault();
+    await putOne("settings",{key:"ai",baseURL:els.baseUrlInput.value.trim().replace(/\/+$/,""),apiKey:els.apiKeyInput.value.trim(),model:els.modelInput.value.trim()});
+    setStatus(els.settingsStatus,"设置已保存");
+    toast("设置已保存");
+  }
+  async function generateSummary(){
+    const content=els.bodyInput.value.trim();
+    if(!content){setStatus(els.summaryStatus,"正文为空，无法生成纪要。",true);return;}
+    const settings=await getOne("settings","ai");
+    if(!settings?.baseURL||!settings?.apiKey||!settings?.model){
+      setStatus(els.summaryStatus,"请先在设置页填写 Base URL、API Key 和模型。",true);return;
+    }
+    const endpoint=settings.baseURL.endsWith("/chat/completions")?settings.baseURL:`${settings.baseURL}/chat/completions`;
+    els.summaryBtn.disabled=true;els.summaryBtn.textContent="生成中…";setStatus(els.summaryStatus,"正在调用 AI 接口…");
+    try{
+      const response=await fetch(endpoint,{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":`Bearer ${settings.apiKey}`},
+        body:JSON.stringify({model:settings.model,messages:[{role:"system",content:SYSTEM_PROMPT},{role:"user",content}]})
+      });
+      if(!response.ok)throw new Error(`HTTP ${response.status} ${(await response.text()).slice(0,180)}`);
+      const data=await response.json();
+      const result=data.choices?.[0]?.message?.content;
+      if(typeof result!=="string"||!result.trim())throw new Error("接口未返回有效内容");
+      els.summaryOutput.value=result.trim();
+      els.summaryOutput.hidden=false;
+      els.appendSummaryBtn.hidden=false;
+      setStatus(els.summaryStatus,"纪要已生成，请确认后再追加或保存。");
+    }catch(error){
+      setStatus(els.summaryStatus,`生成失败：${error.message}`,true);
+    }finally{
+      els.summaryBtn.disabled=false;els.summaryBtn.textContent="生成纪要";
+    }
+  }
+  function appendSummary(){
+    const value=els.summaryOutput.value.trim();
+    if(!value)return;
+    els.bodyInput.value=`${els.bodyInput.value.trim()}\n\n${value}\n`;
+    showEditorTab("edit");
+    toast("已追加到正文，记得保存");
+  }
+
+  function blobToDataUrl(blob){
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=()=>reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+  }
+  async function dataUrlToBlob(dataUrl){
+    return (await fetch(dataUrl)).blob();
+  }
+  async function exportBackup(){
+    setStatus(els.settingsStatus,"正在整理备份…");
+    try{
+      const [meetings,recordings,settings]=await Promise.all([getAll("meetings"),getAll("recordings"),getAll("settings")]);
+      const encoded=await Promise.all(recordings.map(async item=>({...item,blob:await blobToDataUrl(item.blob)})));
+      const payload={version:1,exportedAt:new Date().toISOString(),meetings,recordings:encoded,settings};
+      download(`会议速记备份-${today()}.json`,JSON.stringify(payload),"application/json");
+      setStatus(els.settingsStatus,`已导出 ${meetings.length} 条会议和 ${recordings.length} 段录音。`);
+    }catch(error){setStatus(els.settingsStatus,`导出失败：${error.message}`,true);}
+  }
+  async function restoreBackup(event){
+    const file=event.target.files[0];
+    event.target.value="";
+    if(!file)return;
+    if(!confirmTwice("恢复备份会覆盖当前全部会议、录音和设置。"))return;
+    setStatus(els.settingsStatus,"正在恢复备份…");
+    try{
+      const payload=JSON.parse(await file.text());
+      if(payload.version!==1||!Array.isArray(payload.meetings)||!Array.isArray(payload.recordings))throw new Error("备份格式不正确");
+      const recordings=await Promise.all(payload.recordings.map(async item=>({...item,blob:await dataUrlToBlob(item.blob)})));
+      const tx=db.transaction(["meetings","recordings","settings"],"readwrite");
+      ["meetings","recordings","settings"].forEach(store=>tx.objectStore(store).clear());
+      payload.meetings.forEach(item=>tx.objectStore("meetings").put(item));
+      recordings.forEach(item=>tx.objectStore("recordings").put(item));
+      (payload.settings||[]).forEach(item=>tx.objectStore("settings").put(item));
+      await transactionDone(tx);
+      await loadMeetings();await loadSettings();
+      setStatus(els.settingsStatus,`恢复完成：${payload.meetings.length} 条会议。`);
+      toast("备份已恢复");
+    }catch(error){setStatus(els.settingsStatus,`恢复失败：${error.message}`,true);}
+  }
+
+  function bindEvents(){
+    els.searchInput.addEventListener("input",event=>{state.query=event.target.value;renderList();});
+    els.tagFilters.addEventListener("click",event=>{
+      const button=event.target.closest("[data-tag]");if(!button)return;
+      state.tag=button.dataset.tag;renderList();
+    });
+    els.meetingList.addEventListener("click",event=>{
+      const card=event.target.closest("[data-id]");if(card)openEditor(card.dataset.id);
+    });
+    els.meetingList.addEventListener("keydown",event=>{
+      if(event.key==="Enter")event.target.closest("[data-id]")?.click();
+    });
+    els.newBtn.addEventListener("click",()=>openEditor());
+    els.settingsBtn.addEventListener("click",async()=>{await loadSettings();showView("settings");});
+    els.backBtn.addEventListener("click",()=>{stopSpeech();showView("list");loadMeetings();});
+    els.meetingForm.addEventListener("submit",saveMeeting);
+    els.deleteMeetingBtn.addEventListener("click",removeCurrentMeeting);
+    els.editTab.addEventListener("click",()=>showEditorTab("edit"));
+    els.previewTab.addEventListener("click",()=>showEditorTab("preview"));
+    els.speechBtn.addEventListener("click",toggleSpeech);
+    els.recordBtn.addEventListener("click",toggleRecording);
+    els.recordings.addEventListener("click",event=>{
+      const button=event.target.closest(".delete-recording");if(button)removeRecording(button.dataset.id);
+    });
+    els.summaryBtn.addEventListener("click",generateSummary);
+    els.appendSummaryBtn.addEventListener("click",appendSummary);
+    els.exportMdBtn.addEventListener("click",()=>{
+      const meeting=meetingFromForm(state.current);
+      download(`${meeting.title.replace(/[\\/:*?"<>|]/g,"_")||"会议纪要"}.md`,meetingMarkdown(meeting),"text/markdown");
+    });
+    els.settingsForm.addEventListener("submit",saveSettings);
+    els.backupBtn.addEventListener("click",exportBackup);
+    els.restoreInput.addEventListener("change",restoreBackup);
+    window.addEventListener("beforeunload",()=>{stopSpeech();clearPlaybackUrls();});
+  }
+  async function init(){
+    try{
+      db=await openDatabase();
+      bindEvents();
+      els.dateInput.value=today();
+      await loadMeetings();
+      if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+    }catch(error){
+      document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong>${escapeHtml(error.message)}</div>`;
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
