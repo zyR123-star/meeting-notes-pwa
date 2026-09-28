@@ -27,6 +27,8 @@ python -m http.server 8080
 - 转写：`POST {转写 Base URL}/audio/transcriptions`
 - 笔记：`POST {笔记 Base URL}/chat/completions`
 - 识别语言可选自动检测、中文或 English；自动检测时不发送语言参数。
+- 转写优先请求时间戳，服务商不支持时自动回退普通 JSON；上传文件名会跟随录音格式。
+- 硅基流动按官方文档仅发送 `file` 和 `model`，其他兼容服务可发送语言、热词和时间戳参数。
 - 服务商必须允许浏览器跨域请求。
 - 笔记 API Key 和转写 API Key 分开保存；转写 Key 为空时兼容旧版，回退使用笔记 Key。
 - 课堂、会议和录音保存在 IndexedDB 数据库 `mtx`。
