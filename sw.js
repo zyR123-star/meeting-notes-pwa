@@ -1,4 +1,4 @@
-const CACHE="duoduo-notes-v2.0.6";
+const CACHE="duoduo-notes-v2.0.7";
 const ASSETS=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./icon.svg"];
 
 self.addEventListener("install",event=>{
