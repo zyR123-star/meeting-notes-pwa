@@ -188,7 +188,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
     <div class="row"><label class="field"><span>笔记 API Key</span><input id="apiKeyInput" type="password" autocomplete="off"></label><label class="field"><span>转写 API Key</span><input id="asrApiKeyInput" type="password" autocomplete="off"></label></div>
     <div class="row"><label class="field"><span>笔记模型</span><input id="chatModelInput"></label><label class="field"><span>转写模型</span><input id="asrModelInput"></label></div>
     <div class="actions"><button class="primary" type="submit">保存设置</button><button id="clearAudioBtn" class="danger" type="button">清理全部音频保留文字</button></div>
-    <div id="storageInfo" class="tiny"></div><div id="settingsStatus" class="status"></div><p class="tiny" style="margin:0">版本 3.1.3</p>
+    <div id="storageInfo" class="tiny"></div><div id="settingsStatus" class="status"></div><p class="tiny" style="margin:0">版本 3.1.4</p>
   </form>
 </section>
 </main>
@@ -345,7 +345,7 @@ document.addEventListener("change",e=>{if(e.target.id==="languageInput"){const c
 window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener?.("change",()=>applyTheme());
 function handleVisibility(){if(document.visibilityState==="hidden"&&state.recording){try{state.recording.recorder?.requestData()}catch{}stopRecording()}updateWakeLock()}
 document.addEventListener("visibilitychange",handleVisibility);window.addEventListener("pageshow",handleVisibility);
-async function init(){try{applyTheme();history.replaceState({view:"home"},"");db=await openDB();await migrateOld();await migrateData();bind();await loadData();if("serviceWorker"in navigator){let refreshing=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload()}});navigator.serviceWorker.register("sw.js?v=3.1.3").then(r=>r.update()).catch(()=>{})}}catch(e){document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong><p>${escape(e?.message||String(e))}</p><p class="tiny">${location.protocol==="file:"?"请通过 HTTP 服务打开，不要双击 HTML。":"请在浏览器控制台查看完整错误。"}</p></div>`}}
+async function init(){try{applyTheme();history.replaceState({view:"home"},"");db=await openDB();await migrateOld();await migrateData();bind();await loadData();if("serviceWorker"in navigator){let refreshing=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload()}});navigator.serviceWorker.register("sw.js?v=3.1.4").then(r=>r.update()).catch(()=>{})}}catch(e){document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong><p>${escape(e?.message||String(e))}</p><p class="tiny">${location.protocol==="file:"?"请通过 HTTP 服务打开，不要双击 HTML。":"请在浏览器控制台查看完整错误。"}</p></div>`}}
 init();
 })();
 </script>
