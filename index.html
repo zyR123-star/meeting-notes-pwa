@@ -32,11 +32,17 @@
 }}
 html[data-theme="halloween"] .topbar{border-bottom:1px solid color-mix(in srgb,var(--primary) 22%,transparent)}
 html[data-theme="halloween"] .brand-mascot{position:relative}
-html[data-theme="halloween"] .brand-mascot::before{content:"";position:absolute;z-index:2;left:17px;top:-5px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:16px solid var(--primary);transform:rotate(-8deg)}
-html[data-theme="halloween"] .brand-mascot::after{content:"";position:absolute;z-index:3;left:11px;top:9px;width:29px;height:4px;border-radius:4px;background:var(--primary);transform:rotate(-8deg)}
+html[data-theme="halloween"] .brand-mascot::before{content:"";position:absolute;z-index:2;left:17px;top:-5px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:16px solid #211a24;transform:rotate(-8deg)}
+html[data-theme="halloween"] .brand-mascot::after{content:"";position:absolute;z-index:3;left:11px;top:9px;width:29px;height:4px;border-radius:4px;background:#211a24;transform:rotate(-8deg)}
+.hat-band{display:none}
+html[data-theme="halloween"] .hat-band{display:block;position:absolute;z-index:4;left:17px;top:5px;width:17px;height:4px;border-radius:3px;background:#f28a3c;box-shadow:0 1px 0 rgba(74,34,18,.2);transform:rotate(-8deg)}
 html[data-theme="halloween"] .welcome{border-color:color-mix(in srgb,var(--primary) 35%,var(--line));background:color-mix(in srgb,var(--primary-soft) 70%,var(--surface))}
-html[data-theme="halloween"] .welcome::after{color:var(--primary)}
 html[data-theme="halloween"] .welcome-sticker{background:var(--primary);border-color:color-mix(in srgb,var(--primary) 70%,#6e2a15)}
+html[data-theme="halloween"] .welcome{padding-right:92px}
+html[data-theme="halloween"] .welcome-spark{display:none}
+html[data-theme="halloween"] .halloween-deco{display:flex}
+html[data-theme="halloween"] .halloween-ghost{animation:ghost-drift 3.6s ease-in-out infinite}
+html[data-theme="halloween"] .halloween-candy{animation:candy-tilt 3s ease-in-out infinite}
 html[data-theme="halloween"] .card:not(.course-card){border-top-color:var(--primary)}
 html[data-theme="halloween"] .record-bar{background:#2b1a34}
 html[data-theme="halloween"] .volume i{background:var(--primary)}
@@ -54,6 +60,7 @@ button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}
 .view{animation:in .18s ease-out}@keyframes in{from{opacity:.45;transform:translateY(4px)}}
 .welcome{position:relative;display:flex;align-items:center;gap:12px;overflow:hidden;margin:2px 0 14px;padding:16px 56px 16px 16px;border:1px solid #ffd5e6;border-radius:14px;background:var(--pink-soft)}
 .welcome-spark{position:absolute;right:14px;top:12px;width:28px;height:28px;transform:rotate(12deg);filter:drop-shadow(0 3px 3px rgba(137,103,39,.14))}.welcome-sticker{width:48px;height:48px;flex:none;display:grid;place-items:center;background:var(--pink);border:2px solid color-mix(in srgb,var(--pink) 65%,#9d5879);border-radius:16px;transform:rotate(-4deg);box-shadow:0 4px 0 color-mix(in srgb,var(--pink) 35%,transparent)}.welcome-sticker svg{width:32px;height:32px}
+.halloween-deco{display:none;position:absolute;right:12px;top:11px;z-index:2;align-items:center;gap:3px}.halloween-ghost{width:38px;height:38px;filter:drop-shadow(0 4px 4px rgba(86,47,82,.16))}.halloween-candy{width:26px;height:26px;filter:drop-shadow(0 3px 3px rgba(86,47,82,.14))}
 .welcome span{display:block;color:var(--pink);font-size:10px;font-weight:800;letter-spacing:.12em}.welcome h2{margin:2px 0 0;font-size:16px;line-height:1.45}.welcome p{margin:3px 0 0;color:var(--muted);font-size:12px}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:2px 0 13px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
 .tabs button{min-height:44px;display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-weight:700}.tabs button.active{background:var(--primary);color:#fff}.tab-sticker{width:24px;height:24px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:var(--surface2);transform:rotate(-2deg)}.tab-sticker svg{width:17px;height:17px}.tab-sticker.meeting{color:var(--primary);background:var(--primary-soft)}.tab-sticker.course{color:var(--mint);background:var(--mint-soft);transform:rotate(2deg)}.tabs button.active .tab-sticker{color:#fff;background:color-mix(in srgb,var(--primary) 72%,#fff);border-color:transparent}
@@ -94,10 +101,10 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .volume{height:34px;display:flex;align-items:flex-end;gap:3px}.volume i{flex:1;min-width:3px;height:5px;border-radius:4px;background:#8fc9ff;transition:height .08s}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));z-index:50;max-width:calc(100% - 30px);transform:translate(-50%,16px);opacity:0;pointer-events:none;padding:10px 14px;border-radius:12px;background:#54435b;color:#fff;box-shadow:var(--shadow);transition:.2s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@keyframes mascot-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@keyframes heart-sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(1deg) translateY(-4px)}}@keyframes star-twinkle{0%,100%{transform:rotate(8deg) scale(1)}50%{transform:rotate(24deg) scale(.86)}}@keyframes star-breathe{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-1deg) translateY(-3px) scale(1.13)}}
+@keyframes mascot-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@keyframes heart-sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(1deg) translateY(-4px)}}@keyframes star-twinkle{0%,100%{transform:rotate(8deg) scale(1)}50%{transform:rotate(24deg) scale(.86)}}@keyframes star-breathe{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-1deg) translateY(-3px) scale(1.13)}}@keyframes ghost-drift{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-4px) rotate(3deg)}}@keyframes candy-tilt{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-6deg)}}
 @media(prefers-reduced-motion:no-preference){.brand-mascot{animation:mascot-float 3.8s ease-in-out infinite}.welcome-sticker{animation:heart-sway 4.2s ease-in-out infinite}.welcome-spark{animation:star-twinkle 3.2s ease-in-out infinite}.empty::before{animation:star-breathe 2.8s ease-in-out infinite}}
-@media(prefers-reduced-motion:reduce){.brand-mascot,.welcome-sticker,.welcome-spark,.empty::before{animation:none}}
-@media(max-width:420px){.row{grid-template-columns:1fr}.lesson{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"no title state" "no date duration"}.lesson-no{grid-area:no}.lesson-title{grid-area:title}.lesson-date{grid-area:date}.lesson-duration{grid-area:duration}.lesson .state{grid-area:state}.marker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.section-content{padding-left:0}.section-content .entry{grid-template-columns:52px minmax(0,1fr)}.topbar h1{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.brand-mascot,.welcome-sticker,.welcome-spark,.empty::before,.halloween-ghost,.halloween-candy{animation:none}}
+@media(max-width:420px){.row{grid-template-columns:1fr}.lesson{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"no title state" "no date duration"}.lesson-no{grid-area:no}.lesson-title{grid-area:title}.lesson-date{grid-area:date}.lesson-duration{grid-area:duration}.lesson .state{grid-area:state}.marker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.section-content{padding-left:0}.section-content .entry{grid-template-columns:52px minmax(0,1fr)}.topbar h1{font-size:18px}html[data-theme="halloween"] .welcome{padding-right:82px}.halloween-deco{right:9px}.halloween-ghost{width:32px;height:32px}.halloween-candy{width:22px;height:22px}}
 </style>
 </head>
 <body>
@@ -105,6 +112,8 @@ button:disabled{opacity:.45;cursor:not-allowed}
   <symbol id="duoduo-cloud" viewBox="0 0 64 64"><path d="M15 47C7 47 3 41 5 35c1-5 5-8 10-8 2-11 18-16 25-6 8-2 14 4 14 11 0 9-7 15-16 15H15z" fill="#fff" stroke="#5b526b" stroke-width="3" stroke-linejoin="round"/><circle cx="24" cy="36" r="2.5" fill="#5b526b"/><circle cx="40" cy="36" r="2.5" fill="#5b526b"/><path d="M27 42c3 3 7 3 10 0" fill="none" stroke="#5b526b" stroke-width="2.5" stroke-linecap="round"/><path d="M43 13c-6-6-11 1-4 6-7 5-2 11 4 6 6 5 11-1 4-6 7-5 2-12-4-6z" fill="#ff8fba" stroke="#b75c83" stroke-width="2" stroke-linejoin="round"/><path d="M12 22l1.5 3 3 .8-3 1.5-.8 3-1.5-3-3-.8 3-1.5z" fill="#ffd56a"/></symbol>
   <symbol id="duoduo-heart" viewBox="0 0 64 64"><path d="M32 54S9 41 9 24c0-8 6-14 14-14 5 0 8 2 9 6 2-4 5-6 10-6 8 0 14 6 14 14 0 17-24 30-24 30z" fill="#ff8fba" stroke="#b75c83" stroke-width="3" stroke-linejoin="round"/><path d="M20 24c1-4 4-7 8-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="duoduo-star" viewBox="0 0 64 64"><path d="M32 6l7.4 16.7 18.1 2-13.6 12.1 3.9 17.8L32 45.8 16.2 54.6l3.9-17.8L6.5 24.7l18.1-2z" fill="#ffd56a" stroke="#b89435" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="32" r="4" fill="#fff4c8"/></symbol>
+  <symbol id="duoduo-ghost" viewBox="0 0 64 64"><path d="M12 34c0-14 8-24 20-24s20 10 20 24v22l-7-5-6 5-7-5-6 5-7-5-7 5z" fill="#fff8ef" stroke="#77506f" stroke-width="3" stroke-linejoin="round"/><circle cx="25" cy="33" r="2.7" fill="#554257"/><circle cx="39" cy="33" r="2.7" fill="#554257"/><path d="M27 41c3 2.6 7 2.6 10 0" fill="none" stroke="#554257" stroke-width="2.5" stroke-linecap="round"/><circle cx="18" cy="39" r="4" fill="#ffc2d8" opacity=".7"/><circle cx="46" cy="39" r="4" fill="#ffc2d8" opacity=".7"/></symbol>
+  <symbol id="duoduo-candy" viewBox="0 0 64 64"><path d="M7 21l15 11L7 43zM57 21L42 32l15 11z" fill="#ff8fba" stroke="#92506e" stroke-width="3" stroke-linejoin="round"/><ellipse cx="32" cy="32" rx="14" ry="11" fill="#ffd56a" stroke="#9d7731" stroke-width="3"/><path d="M24 23l16 18M20 29l12-9M32 41l12-9" fill="none" stroke="#fff4c8" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="duoduo-pencil" viewBox="0 0 64 64"><path d="M15 47l4-14L42 10a5 5 0 017 7L26 40z" fill="#fff" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M15 47l5-1-4-4z" fill="currentColor"/><path d="M39 13l12 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="duoduo-mic" viewBox="0 0 64 64"><rect x="23" y="8" width="18" height="31" rx="9" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M16 32c0 10 7 17 16 17s16-7 16-17M32 49v8M23 57h18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="duoduo-clock" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M32 18v15l10 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -114,13 +123,13 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <div class="app">
 <header class="topbar">
   <button id="backBtn" class="icon-btn" type="button" aria-label="返回" hidden>←</button>
-  <div class="brand-mascot" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#duoduo-cloud"></use></svg></div>
+  <div class="brand-mascot" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#duoduo-cloud"></use></svg><span class="hat-band"></span></div>
   <div class="title-copy"><h1 id="pageTitle">多多速记</h1><p id="pageSub">课堂与会议，一次记清楚</p></div>
   <button id="settingsBtn" class="icon-btn" type="button" aria-label="设置">⚙</button>
 </header>
 <main>
 <section id="homeView" class="view">
-  <div class="welcome"><div class="welcome-sticker" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#duoduo-heart"></use></svg></div><div><span>DUODUO'S NOTEBOOK</span><h2>多多，今天也要把重要的话收好呀。</h2><p>课堂和会议，都慢慢变成闪光的记录。</p></div><svg class="welcome-spark" viewBox="0 0 64 64" aria-hidden="true"><use href="#duoduo-star"></use></svg></div>
+  <div class="welcome"><div class="welcome-sticker" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#duoduo-heart"></use></svg></div><div><span>DUODUO'S NOTEBOOK</span><h2>多多，今天也要把重要的话收好呀。</h2><p>课堂和会议，都慢慢变成闪光的记录。</p></div><svg class="welcome-spark" viewBox="0 0 64 64" aria-hidden="true"><use href="#duoduo-star"></use></svg><div class="halloween-deco" aria-hidden="true"><svg class="halloween-ghost" viewBox="0 0 64 64"><use href="#duoduo-ghost"></use></svg><svg class="halloween-candy" viewBox="0 0 64 64"><use href="#duoduo-candy"></use></svg></div></div>
   <div class="tabs"><button id="meetTab" type="button" data-mode="meet"><span class="tab-sticker meeting" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#duoduo-meeting"></use></svg></span><span>会议</span></button><button id="courseTab" class="active" type="button" data-mode="course"><span class="tab-sticker course" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#duoduo-book"></use></svg></span><span>课程</span></button></div>
   <div class="searchline"><input id="searchInput" type="search" placeholder="搜索标题、正文、笔记或标签"><button id="createBtn" class="primary" type="button">＋</button></div>
   <div id="homeList" class="stack"></div>
@@ -179,7 +188,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
     <div class="row"><label class="field"><span>笔记 API Key</span><input id="apiKeyInput" type="password" autocomplete="off"></label><label class="field"><span>转写 API Key</span><input id="asrApiKeyInput" type="password" autocomplete="off"></label></div>
     <div class="row"><label class="field"><span>笔记模型</span><input id="chatModelInput"></label><label class="field"><span>转写模型</span><input id="asrModelInput"></label></div>
     <div class="actions"><button class="primary" type="submit">保存设置</button><button id="clearAudioBtn" class="danger" type="button">清理全部音频保留文字</button></div>
-    <div id="storageInfo" class="tiny"></div><div id="settingsStatus" class="status"></div><p class="tiny" style="margin:0">版本 3.1.0</p>
+    <div id="storageInfo" class="tiny"></div><div id="settingsStatus" class="status"></div><p class="tiny" style="margin:0">版本 3.1.3</p>
   </form>
 </section>
 </main>
@@ -336,7 +345,7 @@ document.addEventListener("change",e=>{if(e.target.id==="languageInput"){const c
 window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener?.("change",()=>applyTheme());
 function handleVisibility(){if(document.visibilityState==="hidden"&&state.recording){try{state.recording.recorder?.requestData()}catch{}stopRecording()}updateWakeLock()}
 document.addEventListener("visibilitychange",handleVisibility);window.addEventListener("pageshow",handleVisibility);
-async function init(){try{applyTheme();history.replaceState({view:"home"},"");db=await openDB();await migrateOld();await migrateData();bind();await loadData();if("serviceWorker"in navigator){let refreshing=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload()}});navigator.serviceWorker.register("sw.js?v=3.1.0").then(r=>r.update()).catch(()=>{})}}catch(e){document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong><p>${escape(e?.message||String(e))}</p><p class="tiny">${location.protocol==="file:"?"请通过 HTTP 服务打开，不要双击 HTML。":"请在浏览器控制台查看完整错误。"}</p></div>`}}
+async function init(){try{applyTheme();history.replaceState({view:"home"},"");db=await openDB();await migrateOld();await migrateData();bind();await loadData();if("serviceWorker"in navigator){let refreshing=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!refreshing){refreshing=true;location.reload()}});navigator.serviceWorker.register("sw.js?v=3.1.3").then(r=>r.update()).catch(()=>{})}}catch(e){document.body.innerHTML=`<div class="empty"><strong>应用初始化失败</strong><p>${escape(e?.message||String(e))}</p><p class="tiny">${location.protocol==="file:"?"请通过 HTTP 服务打开，不要双击 HTML。":"请在浏览器控制台查看完整错误。"}</p></div>`}}
 init();
 })();
 </script>
